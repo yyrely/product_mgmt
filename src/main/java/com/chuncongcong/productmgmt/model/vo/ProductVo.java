@@ -21,6 +21,8 @@ public class ProductVo {
 	@NotNull(message = "数据不能为null")
 	private Long categoryId;
 
+	private String categoryName;
+
 	@NotNull(message = "数据不能为null")
 	private String productNo;
 

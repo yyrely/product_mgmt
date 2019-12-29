@@ -2,15 +2,6 @@ package com.chuncongcong.productmgmt.controller;
 
 import java.util.List;
 
-import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
-import com.chuncongcong.productmgmt.model.po.ProductPo;
-import com.chuncongcong.productmgmt.page.Paging;
-import com.chuncongcong.productmgmt.model.vo.ProductVo;
-import com.chuncongcong.productmgmt.model.vo.SellSkuVo;
-import com.chuncongcong.productmgmt.page.SimplePagingObject;
-import com.chuncongcong.productmgmt.service.ProductService;
-import com.github.pagehelper.Page;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
+import com.chuncongcong.productmgmt.model.po.ProductPo;
+import com.chuncongcong.productmgmt.model.vo.ProductVo;
+import com.chuncongcong.productmgmt.page.Paging;
+import com.chuncongcong.productmgmt.page.SimplePagingObject;
+import com.chuncongcong.productmgmt.service.ProductService;
+import com.github.pagehelper.Page;
 
 /**
  * @author HU

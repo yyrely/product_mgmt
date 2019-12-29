@@ -2,12 +2,12 @@ package com.chuncongcong.productmgmt.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.chuncongcong.productmgmt.dao.CategoryDao;
 import com.chuncongcong.productmgmt.model.po.CategoryPo;
 import com.chuncongcong.productmgmt.service.CategoryService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author HU
@@ -23,5 +23,10 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<CategoryPo> list() {
 		return categoryDao.selectAll();
+	}
+
+	@Override
+	public CategoryPo getById(Long categoryId) {
+		return categoryDao.selectByPrimaryKey(categoryId);
 	}
 }

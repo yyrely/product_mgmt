@@ -32,6 +32,7 @@ spring:
         max-active: 8
         max-idle: 8
         min-idle: 0
+    password: YYyy0429
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -53,5 +54,5 @@ logging:
       dao: debug
 
 app:
-  id: wxa7834ba1f960caab
-  secret: f540f61967161a94853c1927eb1adf5a
+  id: wx2830175c9fa7e38e
+  secret: 38d3fa244261c51f7009192fbb4809d8

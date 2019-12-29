@@ -20,6 +20,7 @@ import com.chuncongcong.productmgmt.dao.ProductValueDao;
 import com.chuncongcong.productmgmt.dao.SkuValueDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.SkuDto;
+import com.chuncongcong.productmgmt.model.po.CategoryPo;
 import com.chuncongcong.productmgmt.model.po.ProductAttributePo;
 import com.chuncongcong.productmgmt.model.po.ProductPo;
 import com.chuncongcong.productmgmt.model.po.ProductValuePo;
@@ -30,9 +31,9 @@ import com.chuncongcong.productmgmt.model.vo.ProductVo;
 import com.chuncongcong.productmgmt.model.vo.SkuVo;
 import com.chuncongcong.productmgmt.model.vo.ValueVo;
 import com.chuncongcong.productmgmt.page.Paging;
+import com.chuncongcong.productmgmt.service.CategoryService;
 import com.chuncongcong.productmgmt.service.ProductService;
 import com.chuncongcong.productmgmt.service.PurchaseLogService;
-import com.chuncongcong.productmgmt.service.SellLogService;
 import com.chuncongcong.productmgmt.service.SkuService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -67,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     private PurchaseLogService purchaseLogService;
 
     @Autowired
-    private SellLogService sellLogService;
+    private CategoryService categoryService;
 
     @Autowired
     private ModelMapperOperation modelMapperOperation;
@@ -99,14 +100,7 @@ public class ProductServiceImpl implements ProductService {
             skuService.add(skuPo);
             skuVo.setSkuId(skuPo.getSkuId());
             // 保存进货日志
-            PurchaseLogPo purchaseLogPo = new PurchaseLogPo();
-            purchaseLogPo.setProductId(productPo.getProductId());
-            purchaseLogPo.setSkuId(skuPo.getSkuId());
-            purchaseLogPo.setPurchaseNums(skuPo.getSkuStock());
-            purchaseLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(skuPo.getSkuStock())));
-            purchaseLogPo.setPurchaseDate(LocalDateTime.now());
-            purchaseLogPo.setPurchaseUsername(RequestContext.getUserInfo().getUsername());
-            purchaseLogService.save(purchaseLogPo);
+            addPurchaseLog(skuPo);
 
             // 保存规格属性关系
             List<ValueVo> valueList = skuVo.getValueList();
@@ -178,14 +172,7 @@ public class ProductServiceImpl implements ProductService {
                 });
 
                 // 保存进货日志
-                PurchaseLogPo purchaseLogPo = new PurchaseLogPo();
-                purchaseLogPo.setProductId(productPo.getProductId());
-				purchaseLogPo.setSkuId(skuPo.getSkuId());
-                purchaseLogPo.setPurchaseNums(skuPo.getSkuStock());
-                purchaseLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(skuPo.getSkuStock())));
-                purchaseLogPo.setPurchaseDate(LocalDateTime.now());
-                purchaseLogPo.setPurchaseUsername(RequestContext.getUserInfo().getUsername());
-                purchaseLogService.save(purchaseLogPo);
+                addPurchaseLog(skuPo);
             } else {
                 // 修改sku
                 SkuPo skuPo = skuService.getById(skuVo.getSkuId());
@@ -220,8 +207,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVo getInfo(Long productId) {
         ProductPo productPo = checkProductId(productId);
+        CategoryPo categoryPo = categoryService.getById(productPo.getCategoryId());
         List<SkuDto> skuDtos = skuService.getListByProductId(productId);
         ProductVo productVo = modelMapperOperation.map(productPo, ProductVo.class);
+        productVo.setCategoryName(categoryPo.getCategoryName());
         List<SkuVo> skuVos = modelMapperOperation.mapToList(skuDtos, SkuVo.class);
         productVo.setSkuList(skuVos);
         return productVo;
@@ -245,6 +234,17 @@ public class ProductServiceImpl implements ProductService {
             .doSelectPage(() -> productDao.selectByExample(weekend));
 
 	}
+
+	private void addPurchaseLog(SkuPo skuPo) {
+        PurchaseLogPo purchaseLogPo = new PurchaseLogPo();
+        purchaseLogPo.setProductId(skuPo.getProductId());
+        purchaseLogPo.setSkuId(skuPo.getSkuId());
+        purchaseLogPo.setPurchaseNums(skuPo.getSkuStock());
+        purchaseLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(skuPo.getSkuStock())));
+        purchaseLogPo.setPurchaseDate(LocalDateTime.now());
+        purchaseLogPo.setPurchaseUsername(RequestContext.getUserInfo().getUsername());
+        purchaseLogService.save(purchaseLogPo);
+    }
 
     private ProductPo checkProductId(Long productId) {
         ProductPo productPo = productDao.selectByPrimaryKey(productId);

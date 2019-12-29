@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import com.chuncongcong.productmgmt.dao.UserInfoDao;
@@ -19,7 +18,6 @@ import com.chuncongcong.productmgmt.model.vo.UserInfoVo;
 import com.chuncongcong.productmgmt.model.vo.WxLoginResponse;
 import com.chuncongcong.productmgmt.model.vo.WxLoginVo;
 import com.chuncongcong.productmgmt.service.UserInfoService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -73,12 +71,12 @@ public class UserInfoServiceImpl implements UserInfoService {
 		ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
 		String responseJson = responseEntity.getBody();
 		WxLoginResponse wxLoginResponse = objectMapper.readValue(responseJson, WxLoginResponse.class);
-		if(wxLoginResponse.getErrcode() != 0) {
+		if(wxLoginResponse.getErrcode() != null) {
 			throw new ServiceException(wxLoginResponse.getErrcode(), ServiceException.DEFAULT_HTTP_CODE, wxLoginResponse.getErrmsg());
 		}
 		WxLoginVo wxLoginVo = new WxLoginVo();
 		wxLoginVo.setOpenId(wxLoginResponse.getOpenid());
 		wxLoginVo.setToken(wxLoginResponse.getSession_key());
-		return null;
+		return wxLoginVo;
 	}
 }

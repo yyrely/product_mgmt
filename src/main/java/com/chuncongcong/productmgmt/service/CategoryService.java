@@ -17,4 +17,10 @@ public interface CategoryService {
 	 */
 	List<CategoryPo> list();
 
+	/**
+	 * 分类详情
+	 * @param categoryId
+	 * @return
+	 */
+	CategoryPo getById(Long categoryId);
 }
