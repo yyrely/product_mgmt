@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chuncongcong.productmgmt.dao.ProductDao">
+
+	<select id="getAttributes" resultType="java.lang.Long">
+		select attribute_id from product_attribute where productId = #{productId}
+	</select>
+
+	<select id="getValues" resultType="java.lang.Long">
+		select value_id from product_attr_value where productId = #{productId}
+	</select>
+</mapper>

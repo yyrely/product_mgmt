@@ -1,0 +1,57 @@
+server:
+  port: 8040
+
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  aop:
+    proxy-target-class: true
+  datasource:
+    url: jdbc:mysql://120.79.210.91:3306/product_mgmt?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    password: 123456
+    username: root
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-test-query: SELECT 1 FROM DUAL
+      idle-timeout: 60000
+      connection-timeout: 60000
+      validation-timeout: 3000
+      login-timeout: 5
+      max-lifetime: 60000
+  redis:
+    port: 6379
+    host: 120.79.210.91
+    database: 0
+    timeout: 10000
+    lettuce:
+      pool:
+        max-wait: -1
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    cache-enabled: true
+    use-generated-keys: true
+
+#分页设置
+pagehelper:
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count=countSql
+
+logging:
+  level:
+   com:
+    chuncongcong:
+     productmgmt:
+      dao: debug
+
+app:
+  id: wxa7834ba1f960caab
+  secret: f540f61967161a94853c1927eb1adf5a

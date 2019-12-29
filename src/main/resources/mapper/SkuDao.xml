@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chuncongcong.productmgmt.dao.SkuDao">
+
+	<resultMap id="skuResultMap" type="com.chuncongcong.productmgmt.model.dto.SkuDto">
+		<id column="sku_id" jdbcType="BIGINT" property="skuId" />
+		<result column="product_id" jdbcType="BIGINT" property="productId" />
+		<result column="sku_in_price" jdbcType="DECIMAL" property="skuInPrice" />
+		<result column="sku_out_price" jdbcType="DECIMAL" property="skuOutPrice" />
+		<result column="sku_stock" jdbcType="INTEGER" property="skuStock" />
+		<result column="sku_desc" jdbcType="VARCHAR" property="skuDesc" />
+		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto">
+			<id column="value_id" jdbcType="BIGINT" property="valueId" />
+			<result column="attribute_id" jdbcType="BIGINT" property="attributeId" />
+			<result column="attribute_name" jdbcType="VARCHAR" property="attributeName" />
+			<result column="value_name" jdbcType="VARCHAR" property="valueName" />
+		</collection>
+	</resultMap>
+
+	<select id="getListByProductId" resultMap="skuResultMap">
+		select
+			t1.sku_id,
+		    t1.product_id,
+		    t1.sku_in_price,
+		    t1.sku_out_price,
+		    t1.sku_stock,
+		    t1.sku_desc,
+		    t3.value_id,
+		    t3.value_name,
+		    t4.attribute_id,
+		    t4.attribute_name
+		from product_sku t1
+		left join sku_value t2
+		on t1.sku_id = t2.sku_Id
+		left join attr_value t3
+		on t2.value_id = t3.value_id
+		left join attribute t4
+		on t3.attribute_id = t4.attribute_id
+		where t1.product_id = #{productId}
+	</select>
+</mapper>
