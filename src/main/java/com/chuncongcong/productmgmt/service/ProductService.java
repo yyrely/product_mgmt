@@ -1,9 +1,9 @@
 package com.chuncongcong.productmgmt.service;
 
 import com.chuncongcong.productmgmt.model.po.ProductPo;
-import com.chuncongcong.productmgmt.page.Paging;
+import com.chuncongcong.productmgmt.model.vo.ProductQueryVo;
 import com.chuncongcong.productmgmt.model.vo.ProductVo;
-import com.chuncongcong.productmgmt.model.vo.SellSkuVo;
+import com.chuncongcong.productmgmt.page.Paging;
 import com.github.pagehelper.Page;
 
 /**
@@ -48,9 +48,7 @@ public interface ProductService {
 	/**
 	 * 获取货品列表
 	 * @param paging
-	 * @param productNo
 	 */
-	Page<ProductPo> listProduct(Paging paging, String productNo);
-
+	Page<ProductPo> listProduct(Paging paging, ProductQueryVo productQueryVo);
 
 }

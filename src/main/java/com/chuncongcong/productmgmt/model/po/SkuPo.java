@@ -22,6 +22,8 @@ public class SkuPo extends BaseFiled {
 	@KeySql(dialect = IdentityDialect.MYSQL, useGeneratedKeys = true)
 	private Long skuId;
 
+	private Long storeId;
+
 	private Long productId;
 
 	private BigDecimal skuInPrice;

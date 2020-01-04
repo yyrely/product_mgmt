@@ -16,7 +16,7 @@ public class ProductVo {
 
 	private Long productId;
 
-	private Long userId;
+	private Long storeId;
 
 	@NotNull(message = "数据不能为null")
 	private Long categoryId;

@@ -50,4 +50,10 @@ public interface SkuService {
 	 * @param sellSkuVo
 	 */
 	void sellSku(SellSkuVo sellSkuVo);
+
+	/**
+	 * 商品统计
+	 * @return
+	 */
+	Object nums();
 }

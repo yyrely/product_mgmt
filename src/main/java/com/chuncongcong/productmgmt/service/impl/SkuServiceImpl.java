@@ -13,6 +13,7 @@ import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.SkuDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.SkuDto;
+import com.chuncongcong.productmgmt.model.dto.SkuNumsDto;
 import com.chuncongcong.productmgmt.model.po.ProductPo;
 import com.chuncongcong.productmgmt.model.po.SellLogPo;
 import com.chuncongcong.productmgmt.model.po.SkuPo;
@@ -79,6 +80,7 @@ public class SkuServiceImpl implements SkuService {
 		ProductPo productPo = productService.getSimpleInfo(sellSkuVo.getProductId());
 		SkuPo skuPo = getById(sellSkuVo.getSkuId());
 		SellLogPo sellLogPo = new SellLogPo();
+		sellLogPo.setStoreId(productPo.getStoreId());
 		sellLogPo.setProductId(productPo.getProductId());
 		sellLogPo.setSkuId(skuPo.getSkuId());
 		sellLogPo.setSellNums(sellSkuVo.getSellNums());
@@ -100,5 +102,10 @@ public class SkuServiceImpl implements SkuService {
 	@Override
 	public List<SkuDto> getListByProductId(Long productId) {
 		return skuDao.getListByProductId(productId);
+	}
+
+	@Override
+	public SkuNumsDto nums() {
+		return skuDao.countNumsAndPrice(RequestContext.getUserInfo().getStoreId());
 	}
 }

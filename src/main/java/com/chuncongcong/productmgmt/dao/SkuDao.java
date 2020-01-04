@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.chuncongcong.productmgmt.model.dto.SkuDto;
+import com.chuncongcong.productmgmt.model.dto.SkuNumsDto;
 import com.chuncongcong.productmgmt.model.po.SkuPo;
 
 /**
@@ -21,4 +22,11 @@ public interface SkuDao extends MyMapper<SkuPo>{
 	 * @return
 	 */
 	List<SkuDto> getListByProductId(Long productId);
+
+	/**
+	 * 货品统计
+	 * @return
+	 */
+	SkuNumsDto countNumsAndPrice(Long storeId);
+
 }

@@ -20,6 +20,8 @@ public class UserInfoPo extends BaseFiled{
 	@KeySql(useGeneratedKeys = true, dialect = IdentityDialect.MYSQL)
 	private Long userId;
 
+	private Long storeId;
+
 	private String username;
 
 	private String password;

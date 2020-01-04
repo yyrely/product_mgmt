@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.model.po.ProductPo;
+import com.chuncongcong.productmgmt.model.vo.ProductQueryVo;
 import com.chuncongcong.productmgmt.model.vo.ProductVo;
 import com.chuncongcong.productmgmt.page.Paging;
 import com.chuncongcong.productmgmt.page.SimplePagingObject;
@@ -51,8 +52,8 @@ public class ProductController {
 	}
 
 	@GetMapping("/list")
-	public Object listProduct(Paging paging, String productNo) {
-		Page<ProductPo> page = productService.listProduct(paging, productNo);
+	public Object listProduct(Paging paging, ProductQueryVo productQueryVo) {
+		Page<ProductPo> page = productService.listProduct(paging, productQueryVo);
 		List<ProductVo> productVos = modelMapperOperation.mapToList(page.getResult(), ProductVo.class);
 		return new SimplePagingObject<>(productVos, paging.getPageNum(), paging.getPageSize(), page.getTotal());
 	}

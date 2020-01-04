@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chuncongcong.productmgmt.dao.PurchaseLogDao">
+
+	<resultMap id="purchaseLogMap" type="com.chuncongcong.productmgmt.model.dto.PurchaseLogDto">
+		<id column="purchase_id" jdbcType="BIGINT" property="purchaseId" />
+		<result column="product_id" jdbcType="BIGINT" property="productId" />
+		<result column="product_name" jdbcType="VARCHAR" property="productName" />
+		<result column="product_no" jdbcType="VARCHAR" property="productNo" />
+		<result column="sku_id" jdbcType="BIGINT" property="skuId" />
+		<result column="purchase_nums" jdbcType="INTEGER" property="purchaseNums" />
+		<result column="purchase_date" jdbcType="TIMESTAMP" property="purchaseDate" />
+		<result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
+		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto">
+			<id column="value_id" jdbcType="BIGINT" property="valueId" />
+			<result column="value_name" jdbcType="VARCHAR" property="valueName" />
+		</collection>
+	</resultMap>
+
+	<select id="list" resultMap="purchaseLogMap">
+		select
+		t1.purchase_id,
+		t2.product_id,
+		t2.product_name,
+		t2.product_no,
+		t1.sku_id,
+		t1.purchase_nums,
+		t1.purchase_date,
+		t1.total_price,
+		t4.value_id,
+		t4.value_name
+		from purchase_log t1
+		left join product t2 on t1.product_id = t2.product_id
+		left join sku_value t3 on t1.sku_id = t3.sku_id
+		left join attr_value t4 on t3.value_id = t4.value_id
+		<where>
+			<if test="purchaseLogQueryVo.startDateTime!=null">
+				and t1.purchase_date >= #{purchaseLogQueryVo.startDateTime}
+			</if>
+			<if test="purchaseLogQueryVo.endDateTime!=null">
+				and t1.purchase_date &lt;= #{purchaseLogQueryVo.endDateTime}
+			</if>
+			<if test="purchaseLogQueryVo.storeId!=null">
+				and t1.store_id = #{purchaseLogQueryVo.storeId}
+			</if>
+		</where>
+		order by purchase_date desc
+	</select>
+	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.PurchaseNumsDto">
+		select
+		count(*) counts,
+		sum(PURCHASE_NUMS) totalNums,
+		sum(TOTAL_PRICE) totalPrices
+		from purchase_log
+		<where>
+			<if test="purchaseLogQueryVo.startDateTime!=null">
+				and purchase_date >= #{purchaseLogQueryVo.startDateTime}
+			</if>
+			<if test="purchaseLogQueryVo.endDateTime!=null">
+				and purchase_date &lt;= #{purchaseLogQueryVo.endDateTime}
+			</if>
+			<if test="purchaseLogQueryVo.storeId!=null">
+				and store_id = #{purchaseLogQueryVo.storeId}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chuncongcong.productmgmt.dao.SellLogDao">
+
+	<resultMap id="sellLogMap" type="com.chuncongcong.productmgmt.model.dto.SellLogDto">
+		<id column="sell_id" jdbcType="BIGINT" property="sellId" />
+		<result column="product_id" jdbcType="BIGINT" property="productId" />
+		<result column="product_name" jdbcType="VARCHAR" property="productName" />
+		<result column="product_no" jdbcType="VARCHAR" property="productNo" />
+		<result column="sku_id" jdbcType="BIGINT" property="skuId" />
+		<result column="sell_nums" jdbcType="INTEGER" property="sellNums" />
+		<result column="sell_price" jdbcType="DECIMAL" property="sellPrice" />
+		<result column="sell_total" jdbcType="DECIMAL" property="sellTotal" />
+		<result column="sell_date" jdbcType="TIMESTAMP" property="sellDate" />
+		<result column="sell_username" jdbcType="VARCHAR" property="sellUsername" />
+		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto">
+			<id column="value_id" jdbcType="BIGINT" property="valueId" />
+			<result column="value_name" jdbcType="VARCHAR" property="valueName" />
+		</collection>
+	</resultMap>
+
+	<select id="list" resultMap="sellLogMap">
+		select
+		t1.sell_id,
+		t2.product_id,
+		t2.product_name,
+		t2.product_no,
+		t1.sku_id,
+		t1.sell_nums,
+		t1.sell_price,
+		t1.sell_total,
+		t1.sell_date,
+		t1.sell_username,
+		t4.value_id,
+		t4.value_name
+		from sell_log t1
+		left join product t2 on t1.product_id = t2.product_id
+		left join sku_value t3 on t1.sku_id = t3.sku_id
+		left join attr_value t4 on t3.value_id = t4.value_id
+		<where>
+			<if test="sellLogQueryVo.startDateTime!=null">
+				and t1.sell_date >= #{sellLogQueryVo.startDateTime}
+			</if>
+			<if test="sellLogQueryVo.endDateTime!=null">
+				and t1.sell_date &lt;= #{sellLogQueryVo.endDateTime}
+			</if>
+			<if test="sellLogQueryVo.storeId!=null">
+				and t1.store_id = #{sellLogQueryVo.storeId}
+			</if>
+		</where>
+		order by sell_date desc
+	</select>
+	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.SellNumsDto">
+		select
+		count(*) counts,
+		sum(SELL_NUMS) totalNums,
+		sum(SELL_TOTAL) totalPrices
+		from sell_log
+		<where>
+			<if test="sellLogQueryVo.startDateTime!=null">
+				and sell_date >= #{sellLogQueryVo.startDateTime}
+			</if>
+			<if test="sellLogQueryVo.endDateTime!=null">
+				and sell_date &lt;= #{sellLogQueryVo.endDateTime}
+			</if>
+			<if test="sellLogQueryVo.storeId!=null">
+				and store_id = #{sellLogQueryVo.storeId}
+			</if>
+		</where>
+	</select>
+
+</mapper>

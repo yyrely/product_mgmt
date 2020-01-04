@@ -23,6 +23,8 @@ public class PurchaseLogPo extends BaseFiled{
 	@KeySql(dialect = IdentityDialect.MYSQL, useGeneratedKeys = true)
 	private Long purchaseId;
 
+	private Long storeId;
+
 	private Long productId;
 
 	private Long skuId;

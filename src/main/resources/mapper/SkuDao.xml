@@ -38,4 +38,15 @@
 		on t3.attribute_id = t4.attribute_id
 		where t1.product_id = #{productId}
 	</select>
+	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.SkuNumsDto">
+		select
+		sum(sku_stock) totalNums,
+		sum(sku_stock*sku_in_price) totalPrice
+		from product_sku
+		<where>
+			<if test="storeId!=null">
+				store_id = #{storeId}
+			</if>
+		</where>
+	</select>
 </mapper>

@@ -27,6 +27,7 @@ import com.chuncongcong.productmgmt.model.po.ProductValuePo;
 import com.chuncongcong.productmgmt.model.po.PurchaseLogPo;
 import com.chuncongcong.productmgmt.model.po.SkuPo;
 import com.chuncongcong.productmgmt.model.po.SkuValuePo;
+import com.chuncongcong.productmgmt.model.vo.ProductQueryVo;
 import com.chuncongcong.productmgmt.model.vo.ProductVo;
 import com.chuncongcong.productmgmt.model.vo.SkuVo;
 import com.chuncongcong.productmgmt.model.vo.ValueVo;
@@ -86,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
 		}
 		// 保存货品
 		ProductPo productPo = modelMapperOperation.map(productVo, ProductPo.class);
-        productPo.setUserId(RequestContext.getUserInfo().getUserId());
+        productPo.setStoreId(RequestContext.getUserInfo().getStoreId());
         productDao.insert(productPo);
         productVo.setProductId(productPo.getProductId());
 
@@ -97,10 +98,11 @@ public class ProductServiceImpl implements ProductService {
             // 保存sku
             SkuPo skuPo = modelMapperOperation.map(skuVo, SkuPo.class);
 			skuPo.setProductId(productPo.getProductId());
+            skuPo.setStoreId(RequestContext.getUserInfo().getStoreId());
             skuService.add(skuPo);
             skuVo.setSkuId(skuPo.getSkuId());
             // 保存进货日志
-            addPurchaseLog(skuPo);
+            addPurchaseLog(skuPo, skuPo.getSkuStock());
 
             // 保存规格属性关系
             List<ValueVo> valueList = skuVo.getValueList();
@@ -172,21 +174,14 @@ public class ProductServiceImpl implements ProductService {
                 });
 
                 // 保存进货日志
-                addPurchaseLog(skuPo);
+                addPurchaseLog(skuPo, skuPo.getSkuStock());
             } else {
                 // 修改sku
                 SkuPo skuPo = skuService.getById(skuVo.getSkuId());
                 if (skuVo.getSkuStock().compareTo(skuPo.getSkuStock()) > 0) {
                     // 进货（增加了已存在的sku）
-                    PurchaseLogPo purchaseLogPo = new PurchaseLogPo();
-                    purchaseLogPo.setProductId(productPo.getProductId());
-					purchaseLogPo.setSkuId(skuPo.getSkuId());
-                    int purchase = skuVo.getSkuStock() - skuPo.getSkuStock();
-                    purchaseLogPo.setPurchaseNums(purchase);
-                    purchaseLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(purchase)));
-                    purchaseLogPo.setPurchaseDate(LocalDateTime.now());
-                    purchaseLogPo.setPurchaseUsername(RequestContext.getUserInfo().getUsername());
-                    purchaseLogService.save(purchaseLogPo);
+                    int inStock = skuVo.getSkuStock() - skuPo.getSkuStock();
+                    addPurchaseLog(skuPo, inStock);
 
                     skuPo.setSkuDesc(skuVo.getSkuDesc());
                     skuPo.setSkuOutPrice(skuVo.getSkuOutPrice());
@@ -222,12 +217,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-    public Page<ProductPo> listProduct(Paging paging, String productNo) {
+    public Page<ProductPo> listProduct(Paging paging, ProductQueryVo productQueryVo) {
         Weekend<ProductPo> weekend = Weekend.of(ProductPo.class);
         WeekendCriteria<ProductPo, Object> weekendCriteria = weekend.weekendCriteria();
-        weekendCriteria.andEqualTo(ProductPo::getUserId, RequestContext.getUserInfo().getUserId());
-        if(StringUtils.isNotEmpty(productNo)) {
-			weekendCriteria.andLike(ProductPo::getProductNo, "%" + productNo + "%");
+        weekendCriteria.andEqualTo(ProductPo::getStoreId, RequestContext.getUserInfo().getStoreId());
+        if(StringUtils.isNotEmpty(productQueryVo.getProductNo())) {
+			weekendCriteria.andLike(ProductPo::getProductNo, "%" + productQueryVo.getProductNo() + "%");
 		}
 		weekend.orderBy("created").desc();
         return PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
@@ -235,12 +230,13 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
-	private void addPurchaseLog(SkuPo skuPo) {
+	private void addPurchaseLog(SkuPo skuPo, Integer inStock) {
         PurchaseLogPo purchaseLogPo = new PurchaseLogPo();
+        purchaseLogPo.setStoreId(skuPo.getStoreId());
         purchaseLogPo.setProductId(skuPo.getProductId());
         purchaseLogPo.setSkuId(skuPo.getSkuId());
-        purchaseLogPo.setPurchaseNums(skuPo.getSkuStock());
-        purchaseLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(skuPo.getSkuStock())));
+        purchaseLogPo.setPurchaseNums(inStock);
+        purchaseLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(inStock)));
         purchaseLogPo.setPurchaseDate(LocalDateTime.now());
         purchaseLogPo.setPurchaseUsername(RequestContext.getUserInfo().getUsername());
         purchaseLogService.save(purchaseLogPo);

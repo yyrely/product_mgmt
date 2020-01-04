@@ -20,7 +20,7 @@ public class ProductPo extends BaseFiled{
 	@KeySql(dialect = IdentityDialect.MYSQL, useGeneratedKeys = true)
 	private Long productId;
 
-	private Long userId;
+	private Long storeId;
 
 	private Long categoryId;
 

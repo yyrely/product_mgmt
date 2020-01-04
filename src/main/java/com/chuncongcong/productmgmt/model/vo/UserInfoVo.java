@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class UserInfoVo {
 
+	private Long storeId;
+
 	private String username;
 
 	@NotNull(message = "数据不能为null")
