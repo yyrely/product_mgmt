@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class SkuNumsDto {
 
-	private Integer totalNums;
+	private Integer totalNums = 0;
 
-	private BigDecimal totalPrice;
+	private BigDecimal totalPrice = BigDecimal.ZERO;
 }

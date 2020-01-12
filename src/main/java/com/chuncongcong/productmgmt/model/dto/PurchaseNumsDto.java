@@ -12,10 +12,10 @@ import lombok.Data;
 @Data
 public class PurchaseNumsDto {
 
-	private Integer counts;
+	private Integer counts = 0;
 
-	private Integer totalNums;
+	private Integer totalNums = 0;
 
-	private BigDecimal totalPrices;
+	private BigDecimal totalPrices = BigDecimal.ZERO;
 
 }
