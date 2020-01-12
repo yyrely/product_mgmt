@@ -61,6 +61,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         stringRedisTemplate.opsForValue().set(USER_TOKEN_PRE + token, objectMapper.writeValueAsString(userInfoPo));
         userInfoVo.setPassword(null);
         userInfoVo.setToken(token);
+        userInfoVo.setUsername(userInfoPo.getUsername());
         return userInfoVo;
     }
 

@@ -86,8 +86,9 @@ public class ProductServiceImpl implements ProductService {
 			throw new ServiceException("该货号的商品已存在");
 		}
 		// 保存货品
+
+        productVo.setStoreId(RequestContext.getUserInfo().getStoreId());
 		ProductPo productPo = modelMapperOperation.map(productVo, ProductPo.class);
-        productPo.setStoreId(RequestContext.getUserInfo().getStoreId());
         productDao.insert(productPo);
         productVo.setProductId(productPo.getProductId());
 
@@ -96,9 +97,9 @@ public class ProductServiceImpl implements ProductService {
         Set<Long> valueSet = new HashSet<>();
         for (SkuVo skuVo : skuList) {
             // 保存sku
+            skuVo.setProductId(productPo.getProductId());
+            skuVo.setStoreId(RequestContext.getUserInfo().getStoreId());
             SkuPo skuPo = modelMapperOperation.map(skuVo, SkuPo.class);
-			skuPo.setProductId(productPo.getProductId());
-            skuPo.setStoreId(RequestContext.getUserInfo().getStoreId());
             skuService.add(skuPo);
             skuVo.setSkuId(skuPo.getSkuId());
             // 保存进货日志
@@ -145,11 +146,13 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(rollbackFor = Exception.class)
     public ProductVo updateSku(ProductVo productVo) {
         ProductPo productPo = checkProductId(productVo.getProductId());
+        modelMapperOperation.map(productPo, productVo);
         productVo.getSkuList().forEach(skuVo -> {
             if (skuVo.getSkuId() == null) {
                 // 进货（新增sku）
+                skuVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+                skuVo.setProductId(productPo.getProductId());
                 SkuPo skuPo = modelMapperOperation.map(skuVo, SkuPo.class);
-                skuPo.setProductId(productPo.getProductId());
                 skuService.add(skuPo);
 				skuVo.setSkuId(skuPo.getSkuId());
                 Set<Long> attributes = productDao.getAttributes(productPo.getProductId());

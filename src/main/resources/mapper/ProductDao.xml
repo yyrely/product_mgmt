@@ -3,10 +3,10 @@
 <mapper namespace="com.chuncongcong.productmgmt.dao.ProductDao">
 
 	<select id="getAttributes" resultType="java.lang.Long">
-		select attribute_id from product_attribute where productId = #{productId}
+		select attribute_id from product_attribute where product_id = #{productId}
 	</select>
 
 	<select id="getValues" resultType="java.lang.Long">
-		select value_id from product_attr_value where productId = #{productId}
+		select value_id from product_attr_value where product_id = #{productId}
 	</select>
 </mapper>

@@ -16,5 +16,5 @@ public class SellNumsDto {
 
 	private Integer totalNums;
 
-	private BigDecimal totalPrice;
+	private BigDecimal totalPrices;
 }

@@ -3,6 +3,7 @@ package com.chuncongcong.productmgmt.service;
 import java.util.List;
 
 import com.chuncongcong.productmgmt.model.dto.SkuDto;
+import com.chuncongcong.productmgmt.model.dto.SkuNumsDto;
 import com.chuncongcong.productmgmt.model.po.SkuPo;
 import com.chuncongcong.productmgmt.model.vo.SellSkuVo;
 
@@ -55,5 +56,5 @@ public interface SkuService {
 	 * 商品统计
 	 * @return
 	 */
-	Object nums();
+	SkuNumsDto nums();
 }

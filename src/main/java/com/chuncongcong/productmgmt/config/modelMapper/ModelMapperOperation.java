@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.chuncongcong.productmgmt.exception.ServiceException;
+
 /**
  * @author HU
  * @date 2019/12/20 21:01
@@ -24,6 +26,13 @@ public class ModelMapperOperation {
 			return null;
 		}
 		return modelMapper.map(source, destinationType);
+	}
+
+	public void map(Object source, Object destination) {
+		if(source == null || destination == null) {
+			throw new ServiceException("数据不能为空");
+		}
+		modelMapper.map(source, destination);
 	}
 
 	public <T> List<T> mapToList(Collection<?> source, Class<T> destinationType) {

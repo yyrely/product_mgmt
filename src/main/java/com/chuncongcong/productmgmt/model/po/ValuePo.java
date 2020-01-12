@@ -1,6 +1,7 @@
 package com.chuncongcong.productmgmt.model.po;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Data;
 import tk.mybatis.mapper.annotation.KeySql;
@@ -12,6 +13,7 @@ import tk.mybatis.mapper.code.IdentityDialect;
  */
 
 @Data
+@Table(name = "attr_value")
 public class ValuePo extends BaseFiled{
 
 	@Id

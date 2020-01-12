@@ -41,7 +41,7 @@ public class ProductController {
 	}
 
 	@PostMapping("/update")
-	public Object updateProduct(@RequestBody @Validated ProductVo productVo) {
+	public Object updateProduct(@RequestBody ProductVo productVo) {
 		ProductPo productPo = productService.updateProduct(productVo);
 		return modelMapperOperation.map(productPo, ProductVo.class);
 	}

@@ -15,6 +15,8 @@ import lombok.Data;
 @Data
 public class SkuVo {
 
+	private Long storeId;
+
 	private Long skuId;
 
 	private Long productId;
