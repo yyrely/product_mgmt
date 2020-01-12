@@ -1,5 +1,6 @@
 package com.chuncongcong.productmgmt.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -51,12 +52,14 @@ public class SellLogServiceImpl implements SellLogService {
 
     @Override
     public SellNumsDto nums(SellLogQueryVo sellLogQueryVo) {
-        if (sellLogQueryVo.getStartDate() != null) {
-            sellLogQueryVo.setStartDateTime(LocalDateTime.of(sellLogQueryVo.getStartDate(), LocalTime.MIN));
+        if (sellLogQueryVo.getStartDate() == null) {
+            sellLogQueryVo.setStartDate(LocalDate.now());
         }
-        if (sellLogQueryVo.getEndDate() != null) {
-            sellLogQueryVo.setEndDateTime(LocalDateTime.of(sellLogQueryVo.getEndDate(), LocalTime.MAX));
+        if (sellLogQueryVo.getEndDate() == null) {
+            sellLogQueryVo.setEndDate(LocalDate.now());
         }
+        sellLogQueryVo.setStartDateTime(LocalDateTime.of(sellLogQueryVo.getStartDate(), LocalTime.MIN));
+        sellLogQueryVo.setEndDateTime(LocalDateTime.of(sellLogQueryVo.getEndDate(), LocalTime.MAX));
         sellLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
         return sellLogDao.countNumsAndPrice(sellLogQueryVo);
     }

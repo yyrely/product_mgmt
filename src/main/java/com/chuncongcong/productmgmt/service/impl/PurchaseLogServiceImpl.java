@@ -1,5 +1,6 @@
 package com.chuncongcong.productmgmt.service.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -54,12 +55,14 @@ public class PurchaseLogServiceImpl implements PurchaseLogService {
     @Override
     public PurchaseNumsDto nums(PurchaseLogQueryVo purchaseLogQueryVo) {
         purchaseLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
-        if (purchaseLogQueryVo.getStartDate() != null) {
-            purchaseLogQueryVo.setStartDateTime(LocalDateTime.of(purchaseLogQueryVo.getStartDate(), LocalTime.MIN));
+        if(purchaseLogQueryVo.getStartDate() == null) {
+            purchaseLogQueryVo.setStartDate(LocalDate.now());
         }
-        if (purchaseLogQueryVo.getEndDate() != null) {
-            purchaseLogQueryVo.setEndDateTime(LocalDateTime.of(purchaseLogQueryVo.getEndDate(), LocalTime.MAX));
+        if(purchaseLogQueryVo.getEndDate() == null) {
+            purchaseLogQueryVo.setEndDate(LocalDate.now());
         }
+        purchaseLogQueryVo.setStartDateTime(LocalDateTime.of(purchaseLogQueryVo.getStartDate(), LocalTime.MIN));
+        purchaseLogQueryVo.setEndDateTime(LocalDateTime.of(purchaseLogQueryVo.getEndDate(), LocalTime.MAX));
         return purchaseLogDao.countNumsAndPrice(purchaseLogQueryVo);
     }
 }
