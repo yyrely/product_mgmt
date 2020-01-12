@@ -1,8 +1,12 @@
 package com.chuncongcong.productmgmt.service.impl;
 
+import static com.chuncongcong.productmgmt.model.constants.PublicConstants.USER_MOBILE_PRE;
 import static com.chuncongcong.productmgmt.model.constants.PublicConstants.USER_TOKEN_PRE;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,7 +61,14 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (!userInfoPo.getPassword().equals(userInfoVo.getPassword())) {
             throw new ServiceException("用户名或密码不正确");
         }
-        String token = UUID.randomUUID().toString();
+		String existToken = stringRedisTemplate.opsForValue().get(USER_MOBILE_PRE + userInfoPo.getMobile());
+        if(StringUtils.isEmpty(existToken)) {
+			stringRedisTemplate.expire(USER_MOBILE_PRE + userInfoPo.getMobile(), 0, TimeUnit.SECONDS);
+			stringRedisTemplate.expire(USER_TOKEN_PRE + existToken, 0, TimeUnit.SECONDS);
+		}
+
+		String token = UUID.randomUUID().toString();
+        stringRedisTemplate.opsForValue().set(USER_MOBILE_PRE + userInfoPo.getMobile(), token);
         stringRedisTemplate.opsForValue().set(USER_TOKEN_PRE + token, objectMapper.writeValueAsString(userInfoPo));
         userInfoVo.setPassword(null);
         userInfoVo.setToken(token);
