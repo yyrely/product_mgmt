@@ -2,20 +2,16 @@ package com.chuncongcong.productmgmt.controller;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
-import com.chuncongcong.productmgmt.model.dto.AttributeDto;
-import com.chuncongcong.productmgmt.model.po.AttributePo;
-import com.chuncongcong.productmgmt.model.vo.AttributeVo;
-import com.chuncongcong.productmgmt.service.AttributeService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
+import com.chuncongcong.productmgmt.model.po.AttributePo;
+import com.chuncongcong.productmgmt.model.vo.AttributeVo;
+import com.chuncongcong.productmgmt.service.AttributeService;
 
 /**
  * @author HU
@@ -34,8 +30,7 @@ public class AttributeController {
 
 	@GetMapping("/value/get/{categoryId}")
 	public Object getAttributeAndValue(@PathVariable("categoryId") Long categoryId) {
-		List<AttributeDto> attributeDtos = attributeService.getAttributeAndValue(categoryId);
-		return modelMapperOperation.mapToList(attributeDtos, AttributeVo.class);
+		return attributeService.getAttributeAndValue(categoryId);
 	}
 
 	@GetMapping("/get/{categoryId}")

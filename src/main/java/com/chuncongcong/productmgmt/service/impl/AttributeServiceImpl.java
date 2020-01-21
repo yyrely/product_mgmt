@@ -1,14 +1,17 @@
 package com.chuncongcong.productmgmt.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.dao.AttributeDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.AttributeDto;
 import com.chuncongcong.productmgmt.model.po.AttributePo;
+import com.chuncongcong.productmgmt.model.vo.AttributeVo;
 import com.chuncongcong.productmgmt.service.AttributeService;
 
 /**
@@ -22,12 +25,29 @@ public class AttributeServiceImpl implements AttributeService {
 	@Autowired
 	private AttributeDao attributeDao;
 
+	@Autowired
+	private ModelMapperOperation modelMapperOperation;
+
 	@Override
-	public List<AttributeDto> getAttributeAndValue(Long categoryId) {
+	public List<AttributeVo> getAttributeAndValue(Long categoryId) {
 		if(categoryId == null) {
 			throw new ServiceException("参数异常");
 		}
-		return attributeDao.getAttributeAndValue(categoryId);
+		List<AttributeDto> attributeDtos = attributeDao.getAttributeAndValue(categoryId);
+		List<AttributeVo> attributeVos = new ArrayList<>();
+		attributeDtos.forEach(attributeDto -> {
+			AttributeVo attributeVo = modelMapperOperation.map(attributeDto, AttributeVo.class);
+			List<Long> valueIds = new ArrayList<>();
+			List<String> valueNames = new ArrayList<>();
+			attributeDto.getValuePos().forEach(valuePo -> {
+				valueIds.add(valuePo.getValueId());
+				valueNames.add(valuePo.getValueName());
+			});
+			attributeVo.setValueIds(valueIds);
+			attributeVo.setValueNames(valueNames);
+			attributeVos.add(attributeVo);
+		});
+		return attributeVos;
 	}
 
 	@Override

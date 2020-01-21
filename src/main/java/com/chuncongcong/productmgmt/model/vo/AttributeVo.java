@@ -2,7 +2,6 @@ package com.chuncongcong.productmgmt.model.vo;
 
 import java.util.List;
 
-import com.chuncongcong.productmgmt.model.po.ValuePo;
 import lombok.Data;
 
 /**
@@ -18,6 +17,10 @@ public class AttributeVo {
 	private Long categoryId;
 
 	private String attributeName;
+
+	private List<Long> valueIds;
+
+	private List<String> valueNames;
 
 	private List<ValueVo> valuePos;
 }

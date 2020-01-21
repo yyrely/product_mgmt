@@ -2,8 +2,8 @@ package com.chuncongcong.productmgmt.service;
 
 import java.util.List;
 
-import com.chuncongcong.productmgmt.model.dto.AttributeDto;
 import com.chuncongcong.productmgmt.model.po.AttributePo;
+import com.chuncongcong.productmgmt.model.vo.AttributeVo;
 
 /**
  * @author HU
@@ -17,7 +17,7 @@ public interface AttributeService {
 	 * @param categoryId
 	 * @return
 	 */
-	List<AttributeDto> getAttributeAndValue(Long categoryId);
+	List<AttributeVo> getAttributeAndValue(Long categoryId);
 
 	/**
 	 * 根据分类查询规格信息
