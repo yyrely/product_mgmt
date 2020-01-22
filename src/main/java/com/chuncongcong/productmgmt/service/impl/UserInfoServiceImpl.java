@@ -62,7 +62,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             throw new ServiceException("用户名或密码不正确");
         }
 		String existToken = stringRedisTemplate.opsForValue().get(USER_MOBILE_PRE + userInfoPo.getMobile());
-        if(StringUtils.isEmpty(existToken)) {
+        if(StringUtils.isNotEmpty(existToken)) {
 			stringRedisTemplate.expire(USER_MOBILE_PRE + userInfoPo.getMobile(), 0, TimeUnit.SECONDS);
 			stringRedisTemplate.expire(USER_TOKEN_PRE + existToken, 0, TimeUnit.SECONDS);
 		}
