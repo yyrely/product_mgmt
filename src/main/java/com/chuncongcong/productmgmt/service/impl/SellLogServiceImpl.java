@@ -6,15 +6,19 @@ import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.SellLogDao;
+import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.SellLogDto;
 import com.chuncongcong.productmgmt.model.dto.SellNumsDto;
 import com.chuncongcong.productmgmt.model.po.SellLogPo;
+import com.chuncongcong.productmgmt.model.po.SkuPo;
 import com.chuncongcong.productmgmt.model.vo.SellLogQueryVo;
 import com.chuncongcong.productmgmt.page.Paging;
 import com.chuncongcong.productmgmt.service.SellLogService;
+import com.chuncongcong.productmgmt.service.SkuService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
@@ -28,6 +32,9 @@ public class SellLogServiceImpl implements SellLogService {
 
     @Autowired
     private SellLogDao sellLogDao;
+
+    @Autowired
+    private SkuService skuService;
 
     @Override
     public void save(SellLogPo sellLogPo) {
@@ -62,5 +69,23 @@ public class SellLogServiceImpl implements SellLogService {
         sellLogQueryVo.setEndDateTime(LocalDateTime.of(sellLogQueryVo.getEndDate(), LocalTime.MAX));
         sellLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
         return sellLogDao.countNumsAndPrice(sellLogQueryVo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void returns(Long sellId) {
+        if(sellId == null) {
+            throw new ServiceException("参数异常");
+        }
+        SellLogPo sellLogPo = sellLogDao.selectByPrimaryKey(sellId);
+        if(sellLogPo == null) {
+            throw new ServiceException("参数异常");
+        }
+        SkuPo skuPo = skuService.getById(sellLogPo.getSkuId());
+        Integer origStockNums = skuPo.getSkuStock();
+        skuPo.setSkuStock(origStockNums + sellLogPo.getSellNums());
+        skuService.updateByOrigStockNums(skuPo, origStockNums);
+
+        sellLogDao.deleteByPrimaryKey(sellId);
     }
 }

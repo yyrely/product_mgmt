@@ -33,4 +33,10 @@ public interface SellLogService {
 	 * @return
 	 */
 	SellNumsDto nums(SellLogQueryVo sellLogQueryVo);
+
+	/**
+	 * 退货
+	 * @param sellId
+	 */
+	void returns(Long sellId);
 }
