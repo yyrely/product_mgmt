@@ -46,6 +46,7 @@ pagehelper:
   supportMethodsArguments: true
   params: count=countSql
 
+
 #logging:
 #  level:
 #   com:
@@ -56,3 +57,6 @@ pagehelper:
 app:
   id: wx2830175c9fa7e38e
   secret: 38d3fa244261c51f7009192fbb4809d8
+logging:
+  file:
+    path: /root/logs/product_mgmt_log
