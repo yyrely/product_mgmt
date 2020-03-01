@@ -18,16 +18,23 @@ import com.chuncongcong.productmgmt.model.vo.ProductVo;
 import com.chuncongcong.productmgmt.page.Paging;
 import com.chuncongcong.productmgmt.page.SimplePagingObject;
 import com.chuncongcong.productmgmt.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author HU
  * @date 2019/12/22 14:40
  */
 
+@Slf4j
 @RestController
 @RequestMapping("/api/product")
 public class ProductController {
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Autowired
 	private ProductService productService;
@@ -36,7 +43,8 @@ public class ProductController {
 	private ModelMapperOperation modelMapperOperation;
 
 	@PostMapping("/add")
-	public Object add(@RequestBody @Validated ProductVo productVo) {
+	public Object add(@RequestBody @Validated ProductVo productVo) throws Exception {
+		log.info("add product:{}", objectMapper.writeValueAsString(productVo));
 		return productService.add(productVo);
 	}
 
