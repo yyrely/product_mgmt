@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.chuncongcong.productmgmt.model.dto.SellLogDto;
-import com.chuncongcong.productmgmt.model.dto.SellNumsDto;
+import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
 import com.chuncongcong.productmgmt.model.po.SellLogPo;
 import com.chuncongcong.productmgmt.model.vo.SellLogQueryVo;
 
@@ -29,5 +29,5 @@ public interface SellLogDao extends MyMapper<SellLogPo>{
 	 * @param sellLogQueryVo
 	 * @return
 	 */
-	SellNumsDto countNumsAndPrice(@Param("sellLogQueryVo") SellLogQueryVo sellLogQueryVo);
+	TotalNumsDto countNumsAndPrice(@Param("sellLogQueryVo") SellLogQueryVo sellLogQueryVo);
 }

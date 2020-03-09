@@ -1,7 +1,7 @@
 package com.chuncongcong.productmgmt.service;
 
 import com.chuncongcong.productmgmt.model.dto.SellLogDto;
-import com.chuncongcong.productmgmt.model.dto.SellNumsDto;
+import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
 import com.chuncongcong.productmgmt.model.po.SellLogPo;
 import com.chuncongcong.productmgmt.model.vo.SellLogQueryVo;
 import com.chuncongcong.productmgmt.page.Paging;
@@ -32,7 +32,7 @@ public interface SellLogService {
 	 * @param sellLogQueryVo
 	 * @return
 	 */
-	SellNumsDto nums(SellLogQueryVo sellLogQueryVo);
+	TotalNumsDto nums(SellLogQueryVo sellLogQueryVo);
 
 	/**
 	 * 退货

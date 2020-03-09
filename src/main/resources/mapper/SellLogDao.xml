@@ -50,7 +50,7 @@
 		</where>
 		order by sell_date desc
 	</select>
-	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.SellNumsDto">
+	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.TotalNumsDto">
 		select
 		count(*) counts,
 		sum(SELL_NUMS) totalNums,

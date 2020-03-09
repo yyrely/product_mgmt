@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.chuncongcong.productmgmt.model.dto.PurchaseLogDto;
-import com.chuncongcong.productmgmt.model.dto.PurchaseNumsDto;
+import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
 import com.chuncongcong.productmgmt.model.po.PurchaseLogPo;
 import com.chuncongcong.productmgmt.model.vo.PurchaseLogQueryVo;
 
@@ -29,5 +29,5 @@ public interface PurchaseLogDao extends MyMapper<PurchaseLogPo>{
 	 * @param purchaseLogQueryVo
 	 * @return
 	 */
-	PurchaseNumsDto countNumsAndPrice(@Param("purchaseLogQueryVo") PurchaseLogQueryVo purchaseLogQueryVo);
+	TotalNumsDto countNumsAndPrice(@Param("purchaseLogQueryVo") PurchaseLogQueryVo purchaseLogQueryVo);
 }

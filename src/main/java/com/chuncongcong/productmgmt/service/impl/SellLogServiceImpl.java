@@ -12,7 +12,7 @@ import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.SellLogDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.SellLogDto;
-import com.chuncongcong.productmgmt.model.dto.SellNumsDto;
+import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
 import com.chuncongcong.productmgmt.model.po.SellLogPo;
 import com.chuncongcong.productmgmt.model.po.SkuPo;
 import com.chuncongcong.productmgmt.model.vo.SellLogQueryVo;
@@ -52,13 +52,13 @@ public class SellLogServiceImpl implements SellLogService {
         sellLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
         Page<SellLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> sellLogDao.list(sellLogQueryVo));
-        SellNumsDto sellNumsDto = sellLogDao.countNumsAndPrice(sellLogQueryVo);
-        page.setTotal(sellNumsDto.getCounts());
+        TotalNumsDto totalNumsDto = sellLogDao.countNumsAndPrice(sellLogQueryVo);
+        page.setTotal(totalNumsDto.getCounts());
         return page;
     }
 
     @Override
-    public SellNumsDto nums(SellLogQueryVo sellLogQueryVo) {
+    public TotalNumsDto nums(SellLogQueryVo sellLogQueryVo) {
         if (sellLogQueryVo.getStartDate() == null) {
             sellLogQueryVo.setStartDate(LocalDate.now());
         }

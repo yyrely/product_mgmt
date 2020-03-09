@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.chuncongcong.productmgmt.model.dto.SkuDto;
-import com.chuncongcong.productmgmt.model.dto.SkuNumsDto;
+import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
 import com.chuncongcong.productmgmt.model.po.SkuPo;
 
 /**
@@ -28,6 +28,6 @@ public interface SkuDao extends MyMapper<SkuPo>{
 	 * 货品统计
 	 * @return
 	 */
-	SkuNumsDto countNumsAndPrice(@Param("storeId") Long storeId);
+	TotalNumsDto countNumsAndPrice(@Param("storeId") Long storeId);
 
 }

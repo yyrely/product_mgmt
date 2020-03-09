@@ -1,7 +1,7 @@
 package com.chuncongcong.productmgmt.service;
 
 import com.chuncongcong.productmgmt.model.dto.PurchaseLogDto;
-import com.chuncongcong.productmgmt.model.dto.PurchaseNumsDto;
+import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
 import com.chuncongcong.productmgmt.model.po.PurchaseLogPo;
 import com.chuncongcong.productmgmt.model.vo.PurchaseLogQueryVo;
 import com.chuncongcong.productmgmt.page.Paging;
@@ -30,5 +30,5 @@ public interface PurchaseLogService {
 	 * @param purchaseLogQueryVo
 	 * @return
 	 */
-	PurchaseNumsDto nums(PurchaseLogQueryVo purchaseLogQueryVo);
+	TotalNumsDto nums(PurchaseLogQueryVo purchaseLogQueryVo);
 }

@@ -22,8 +22,9 @@ public class SellSkuVo {
 	private Long skuId;
 
 	@Min(message = "数量最小为0", value = 0)
+	@NotNull(message = "数据不能为null")
 	private Integer sellNums;
 
 	@Min(message = "金额最小为0", value = 0)
-	private BigDecimal sellPrice;
+	private BigDecimal sellPrice = BigDecimal.ZERO;
 }

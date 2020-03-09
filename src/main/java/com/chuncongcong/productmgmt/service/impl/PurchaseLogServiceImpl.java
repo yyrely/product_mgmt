@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.PurchaseLogDao;
 import com.chuncongcong.productmgmt.model.dto.PurchaseLogDto;
-import com.chuncongcong.productmgmt.model.dto.PurchaseNumsDto;
+import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
 import com.chuncongcong.productmgmt.model.po.PurchaseLogPo;
 import com.chuncongcong.productmgmt.model.vo.PurchaseLogQueryVo;
 import com.chuncongcong.productmgmt.page.Paging;
@@ -36,7 +36,6 @@ public class PurchaseLogServiceImpl implements PurchaseLogService {
 
     @Override
     public Page<PurchaseLogDto> list(Paging paging, PurchaseLogQueryVo purchaseLogQueryVo) {
-
         if (purchaseLogQueryVo.getStartDate() != null) {
             purchaseLogQueryVo.setStartDateTime(LocalDateTime.of(purchaseLogQueryVo.getStartDate(), LocalTime.MIN));
         }
@@ -44,16 +43,16 @@ public class PurchaseLogServiceImpl implements PurchaseLogService {
             purchaseLogQueryVo.setEndDateTime(LocalDateTime.of(purchaseLogQueryVo.getEndDate(), LocalTime.MAX));
         }
         purchaseLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
-        // todo 可手动分页（有重复查询）
+        // 因为一对多，产生的数据是多条，导致总数不对
         Page<PurchaseLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> purchaseLogDao.list(purchaseLogQueryVo));
-        PurchaseNumsDto purchaseNumsDto = purchaseLogDao.countNumsAndPrice(purchaseLogQueryVo);
-        page.setTotal(purchaseNumsDto.getCounts());
+        TotalNumsDto totalNumsDto = purchaseLogDao.countNumsAndPrice(purchaseLogQueryVo);
+        page.setTotal(totalNumsDto.getCounts());
         return page;
     }
 
     @Override
-    public PurchaseNumsDto nums(PurchaseLogQueryVo purchaseLogQueryVo) {
+    public TotalNumsDto nums(PurchaseLogQueryVo purchaseLogQueryVo) {
         purchaseLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
         if(purchaseLogQueryVo.getStartDate() == null) {
             purchaseLogQueryVo.setStartDate(LocalDate.now());

@@ -33,6 +33,13 @@ public class SkuController {
 		return null;
 	}
 
+	@PostMapping("/return")
+	public Object returnSku(@RequestBody @Validated SellSkuVo sellSkuVo) {
+		log.info("sellSkuVo:{}", sellSkuVo);
+		skuService.returnSku(sellSkuVo);
+		return null;
+	}
+
 	@GetMapping("/nums")
 	public Object nums() {
 		return skuService.nums();

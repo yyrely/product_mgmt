@@ -1,5 +1,7 @@
 package com.chuncongcong.productmgmt.model.vo;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Data;
 
 /**
@@ -16,5 +18,6 @@ public class ValueVo {
 
 	private String attributeName;
 
+	@NotNull(message = "数据不能为null")
 	private String valueName;
 }

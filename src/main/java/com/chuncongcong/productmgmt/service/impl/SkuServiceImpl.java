@@ -13,12 +13,14 @@ import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.SkuDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.SkuDto;
-import com.chuncongcong.productmgmt.model.dto.SkuNumsDto;
+import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
 import com.chuncongcong.productmgmt.model.po.ProductPo;
+import com.chuncongcong.productmgmt.model.po.ReturnLogPo;
 import com.chuncongcong.productmgmt.model.po.SellLogPo;
 import com.chuncongcong.productmgmt.model.po.SkuPo;
 import com.chuncongcong.productmgmt.model.vo.SellSkuVo;
 import com.chuncongcong.productmgmt.service.ProductService;
+import com.chuncongcong.productmgmt.service.ReturnLogService;
 import com.chuncongcong.productmgmt.service.SellLogService;
 import com.chuncongcong.productmgmt.service.SkuService;
 
@@ -40,6 +42,9 @@ public class SkuServiceImpl implements SkuService {
 
 	@Autowired
 	private SellLogService sellLogService;
+
+	@Autowired
+	private ReturnLogService returnLogService;
 
 	@Override
 	public void add(SkuPo skuPo) {
@@ -105,7 +110,30 @@ public class SkuServiceImpl implements SkuService {
 	}
 
 	@Override
-	public SkuNumsDto nums() {
+	public TotalNumsDto nums() {
 		return skuDao.countNumsAndPrice(RequestContext.getUserInfo().getStoreId());
+	}
+
+	@Override
+	public void returnSku(SellSkuVo sellSkuVo) {
+		ProductPo productPo = productService.getSimpleInfo(sellSkuVo.getProductId());
+		SkuPo skuPo = getById(sellSkuVo.getSkuId());
+		ReturnLogPo returnLogPo = new ReturnLogPo();
+		returnLogPo.setStoreId(productPo.getStoreId());
+		returnLogPo.setProductId(productPo.getProductId());
+		returnLogPo.setSkuId(skuPo.getSkuId());
+		returnLogPo.setReturnNums(sellSkuVo.getSellNums());
+		returnLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(sellSkuVo.getSellNums())));
+		returnLogPo.setReturnUsername(RequestContext.getUserInfo().getUsername());
+		returnLogPo.setReturnDate(LocalDateTime.now());
+		returnLogService.save(returnLogPo);
+
+		Integer origStockNums = skuPo.getSkuStock();
+		if (sellSkuVo.getSellNums().compareTo(origStockNums) > 0) {
+			throw new ServiceException("库存不足，请检查");
+		}
+		skuPo.setSkuStock(origStockNums - sellSkuVo.getSellNums());
+		SkuService skuServiceAop = (SkuService) AopContext.currentProxy();
+		skuServiceAop.updateByOrigStockNums(skuPo, origStockNums);
 	}
 }
