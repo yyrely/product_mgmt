@@ -49,7 +49,7 @@
 	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.TotalNumsDto">
 		select
 		count(*) counts,
-		sum(PURCHASE_NUMS) totalNums,
+		sum(RETURN_NUMS) totalNums,
 		sum(TOTAL_PRICE) totalPrices
 		from return_log
 		<where>
