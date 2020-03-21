@@ -1,5 +1,6 @@
 package com.chuncongcong.productmgmt.service.impl;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -73,19 +74,28 @@ public class SellLogServiceImpl implements SellLogService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void returns(Long sellId) {
-        if(sellId == null) {
+    public void returns(Long sellId, Integer returnNums) {
+        if (sellId == null) {
             throw new ServiceException("参数异常");
         }
         SellLogPo sellLogPo = sellLogDao.selectByPrimaryKey(sellId);
-        if(sellLogPo == null) {
+        if (sellLogPo == null) {
             throw new ServiceException("参数异常");
+        }
+        if (returnNums > sellLogPo.getSellNums()) {
+            throw new ServiceException("回退数量异常，请检查");
         }
         SkuPo skuPo = skuService.getById(sellLogPo.getSkuId());
         Integer origStockNums = skuPo.getSkuStock();
-        skuPo.setSkuStock(origStockNums + sellLogPo.getSellNums());
+        skuPo.setSkuStock(origStockNums + returnNums);
         skuService.updateByOrigStockNums(skuPo, origStockNums);
+        if (returnNums.equals(sellLogPo.getSellNums())) {
+            sellLogDao.deleteByPrimaryKey(sellId);
+        } else {
+            sellLogPo.setSellNums(sellLogPo.getSellNums() - returnNums);
+            sellLogPo.setSellTotal(sellLogPo.getSellPrice().multiply(new BigDecimal(sellLogPo.getSellNums())));
+            sellLogDao.updateByPrimaryKey(sellLogPo);
+        }
 
-        sellLogDao.deleteByPrimaryKey(sellId);
     }
 }

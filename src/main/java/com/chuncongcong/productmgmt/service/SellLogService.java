@@ -38,5 +38,5 @@ public interface SellLogService {
 	 * 退货
 	 * @param sellId
 	 */
-	void returns(Long sellId);
+	void returns(Long sellId, Integer returnNums);
 }

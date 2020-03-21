@@ -41,7 +41,7 @@
 	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.TotalNumsDto">
 		select
 		sum(sku_stock) totalNums,
-		sum(sku_stock*sku_in_price) totalPrice
+		sum(sku_stock*sku_in_price) totalPrices
 		from product_sku
 		<where>
 			<if test="storeId!=null">

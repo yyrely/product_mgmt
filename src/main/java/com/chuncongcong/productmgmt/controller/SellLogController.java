@@ -33,9 +33,9 @@ public class SellLogController {
 	@Autowired
 	private ModelMapperOperation modelMapperOperation;
 
-	@PostMapping("/returns/{sellId}")
-	public Object returns(@PathVariable("sellId") Long sellId) {
-		sellLogService.returns(sellId);
+	@PostMapping("/returns/{sellId}/{returnNums}")
+	public Object returns(@PathVariable("sellId") Long sellId, @PathVariable("returnNums") Integer returnNums) {
+		sellLogService.returns(sellId, returnNums);
 		return null;
 	}
 
