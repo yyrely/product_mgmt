@@ -2,18 +2,16 @@ package com.chuncongcong.productmgmt.service.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.dao.ValueDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
-import com.chuncongcong.productmgmt.model.po.AttributePo;
 import com.chuncongcong.productmgmt.model.po.ValuePo;
 import com.chuncongcong.productmgmt.model.vo.ValueVo;
 import com.chuncongcong.productmgmt.service.AttributeService;
-import com.chuncongcong.productmgmt.service.CategoryService;
 import com.chuncongcong.productmgmt.service.ValueService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author HU
@@ -46,6 +44,10 @@ public class ValueServiceImpl implements ValueService {
 	public ValuePo save(ValueVo valueVo) {
 		attributeService.getById(valueVo.getAttributeId());
 		ValuePo valuePo = modelMapperOperation.map(valueVo, ValuePo.class);
+		ValuePo existValue = valueDao.selectOne(valuePo);
+		if(existValue != null) {
+			throw new ServiceException("属性已存在，请不要重复添加");
+		}
 		valueDao.insert(valuePo);
 		return valuePo;
 	}
