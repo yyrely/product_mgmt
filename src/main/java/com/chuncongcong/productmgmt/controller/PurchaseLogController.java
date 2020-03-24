@@ -14,16 +14,23 @@ import com.chuncongcong.productmgmt.model.vo.PurchaseLogVo;
 import com.chuncongcong.productmgmt.page.Paging;
 import com.chuncongcong.productmgmt.page.SimplePagingObject;
 import com.chuncongcong.productmgmt.service.PurchaseLogService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author HU
  * @date 2019/12/30 11:23
  */
 
+@Slf4j
 @RestController
 @RequestMapping("/api/purchase/log")
 public class PurchaseLogController {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private PurchaseLogService purchaseLogService;
@@ -32,9 +39,10 @@ public class PurchaseLogController {
     private ModelMapperOperation modelMapperOperation;
 
     @GetMapping("/list")
-    public Object list(Paging paging, PurchaseLogQueryVo purchaseLogQueryVo) {
+    public Object list(Paging paging, PurchaseLogQueryVo purchaseLogQueryVo) throws Exception {
         Page<PurchaseLogDto> page = purchaseLogService.list(paging, purchaseLogQueryVo);
         List<PurchaseLogVo> purchaseLogVos = modelMapperOperation.mapToList(page.getResult(), PurchaseLogVo.class);
+        log.info("PurchaseLogVo list : {}", objectMapper.writeValueAsString(purchaseLogVos));
         return new SimplePagingObject<>(purchaseLogVos, paging.getPageNum(), paging.getPageSize(), page.getTotal());
     }
 
