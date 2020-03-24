@@ -37,7 +37,7 @@
 				and t1.store_id = #{returnLogQueryVo.storeId}
 			</if>
 		</where>
-		order by return_date desc
+		order by return_date desc,t1.return_id
 	</select>
 	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.TotalNumsDto">
 		select

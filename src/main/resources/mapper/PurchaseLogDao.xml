@@ -45,7 +45,7 @@
 				and t1.store_id = #{purchaseLogQueryVo.storeId}
 			</if>
 		</where>
-		order by purchase_date desc
+		order by purchase_date desc,t1.purchase_id
 	</select>
 
 	<select id="getValue" resultMap="valueMap">
