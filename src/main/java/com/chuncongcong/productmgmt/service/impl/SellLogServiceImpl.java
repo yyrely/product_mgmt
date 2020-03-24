@@ -53,8 +53,8 @@ public class SellLogServiceImpl implements SellLogService {
         sellLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
         Page<SellLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> sellLogDao.list(sellLogQueryVo));
-        TotalNumsDto totalNumsDto = sellLogDao.countNumsAndPrice(sellLogQueryVo);
-        page.setTotal(totalNumsDto.getCounts());
+        //TotalNumsDto totalNumsDto = sellLogDao.countNumsAndPrice(sellLogQueryVo);
+        //page.setTotal(totalNumsDto.getCounts());
         return page;
     }
 

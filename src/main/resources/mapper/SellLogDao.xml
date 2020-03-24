@@ -13,10 +13,7 @@
 		<result column="sell_total" jdbcType="DECIMAL" property="sellTotal" />
 		<result column="sell_date" jdbcType="TIMESTAMP" property="sellDate" />
 		<result column="sell_username" jdbcType="VARCHAR" property="sellUsername" />
-		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto">
-			<id column="value_id" jdbcType="BIGINT" property="valueId" />
-			<result column="value_name" jdbcType="VARCHAR" property="valueName" />
-		</collection>
+		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto" column="sku_id" select="com.chuncongcong.productmgmt.dao.PurchaseLogDao.getValue"/>
 	</resultMap>
 
 	<select id="list" resultMap="sellLogMap">

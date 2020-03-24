@@ -11,10 +11,7 @@
 		<result column="return_nums" jdbcType="INTEGER" property="returnNums" />
 		<result column="return_date" jdbcType="TIMESTAMP" property="returnDate" />
 		<result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
-		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto">
-			<id column="value_id" jdbcType="BIGINT" property="valueId" />
-			<result column="value_name" jdbcType="VARCHAR" property="valueName" />
-		</collection>
+		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto" select="getValue" column="sku_id"/>
 	</resultMap>
 
 	<select id="list" resultMap="returnLogMap">

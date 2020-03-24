@@ -43,11 +43,8 @@ public class ReturnLogServiceImpl implements ReturnLogService {
 			returnLogQueryVo.setEndDateTime(LocalDateTime.of(returnLogQueryVo.getEndDate(), LocalTime.MAX));
 		}
 		returnLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
-		// todo 可手动分页（有重复查询）
 		Page<PurchaseLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
 				.doSelectPage(() -> returnLogDao.list(returnLogQueryVo));
-		TotalNumsDto totalNumsDto = returnLogDao.countNumsAndPrice(returnLogQueryVo);
-		page.setTotal(totalNumsDto.getCounts());
 		return page;
 	}
 
