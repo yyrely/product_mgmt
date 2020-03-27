@@ -177,7 +177,9 @@ public class ProductServiceImpl implements ProductService {
                 });
 
                 // 保存进货日志
-                addPurchaseLog(skuPo, skuPo.getSkuStock());
+                if(skuPo.getSkuStock() > 0) {
+                    addPurchaseLog(skuPo, skuPo.getSkuStock());
+                }
             } else {
                 // 修改sku
                 SkuPo skuPo = skuService.getById(skuVo.getSkuId());
