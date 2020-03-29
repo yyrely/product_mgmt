@@ -27,4 +27,6 @@ public class UserInfoPo extends BaseFiled{
 	private String password;
 
 	private String mobile;
+
+	private String roles;
 }

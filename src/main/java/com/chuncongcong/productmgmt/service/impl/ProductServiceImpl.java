@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
-import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.ProductAttributeDao;
 import com.chuncongcong.productmgmt.dao.ProductDao;
 import com.chuncongcong.productmgmt.dao.ProductValueDao;
@@ -76,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ProductVo add(ProductVo productVo) {
+    public ProductVo add(ProductVo productVo, String username) {
 
     	// 判断是否存在货品
 		ProductPo query = new ProductPo();
@@ -86,8 +85,6 @@ public class ProductServiceImpl implements ProductService {
 			throw new ServiceException("该货号的商品已存在");
 		}
 		// 保存货品
-
-        productVo.setStoreId(RequestContext.getUserInfo().getStoreId());
 		ProductPo productPo = modelMapperOperation.map(productVo, ProductPo.class);
         productDao.insert(productPo);
         productVo.setProductId(productPo.getProductId());
@@ -98,12 +95,12 @@ public class ProductServiceImpl implements ProductService {
         for (SkuVo skuVo : skuList) {
             // 保存sku
             skuVo.setProductId(productPo.getProductId());
-            skuVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+            skuVo.setStoreId(productPo.getStoreId());
             SkuPo skuPo = modelMapperOperation.map(skuVo, SkuPo.class);
             skuService.add(skuPo);
             skuVo.setSkuId(skuPo.getSkuId());
             // 保存进货日志
-            addPurchaseLog(skuPo, skuPo.getSkuStock());
+            addPurchaseLog(skuPo, skuPo.getSkuStock(), username);
 
             // 保存规格属性关系
             List<ValueVo> valueList = skuVo.getValueList();
@@ -144,13 +141,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ProductVo updateSku(ProductVo productVo) {
+    public ProductVo updateSku(ProductVo productVo, String username) {
         ProductPo productPo = checkProductId(productVo.getProductId());
         modelMapperOperation.map(productPo, productVo);
         productVo.getSkuList().forEach(skuVo -> {
             if (skuVo.getSkuId() == null) {
                 // 进货（新增sku）
-                skuVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+                skuVo.setStoreId(productPo.getStoreId());
                 skuVo.setProductId(productPo.getProductId());
                 SkuPo skuPo = modelMapperOperation.map(skuVo, SkuPo.class);
                 skuService.add(skuPo);
@@ -178,7 +175,7 @@ public class ProductServiceImpl implements ProductService {
 
                 // 保存进货日志
                 if(skuPo.getSkuStock() > 0) {
-                    addPurchaseLog(skuPo, skuPo.getSkuStock());
+                    addPurchaseLog(skuPo, skuPo.getSkuStock(), username);
                 }
             } else {
                 // 修改sku
@@ -186,7 +183,7 @@ public class ProductServiceImpl implements ProductService {
                 if (skuVo.getSkuStock().compareTo(skuPo.getSkuStock()) > 0) {
                     // 进货（增加了已存在的sku）
                     int inStock = skuVo.getSkuStock() - skuPo.getSkuStock();
-                    addPurchaseLog(skuPo, inStock);
+                    addPurchaseLog(skuPo, inStock, username);
 
                     skuPo.setSkuDesc(skuVo.getSkuDesc());
                     skuPo.setSkuOutPrice(skuVo.getSkuOutPrice());
@@ -225,7 +222,7 @@ public class ProductServiceImpl implements ProductService {
     public Page<ProductPo> listProduct(Paging paging, ProductQueryVo productQueryVo) {
         Weekend<ProductPo> weekend = Weekend.of(ProductPo.class);
         WeekendCriteria<ProductPo, Object> weekendCriteria = weekend.weekendCriteria();
-        weekendCriteria.andEqualTo(ProductPo::getStoreId, RequestContext.getUserInfo().getStoreId());
+        weekendCriteria.andEqualTo(ProductPo::getStoreId, productQueryVo.getStoreId());
         if(StringUtils.isNotEmpty(productQueryVo.getProductNo())) {
 			weekendCriteria.andLike(ProductPo::getProductNo, "%" + productQueryVo.getProductNo() + "%");
 		}
@@ -235,7 +232,7 @@ public class ProductServiceImpl implements ProductService {
 
 	}
 
-	private void addPurchaseLog(SkuPo skuPo, Integer inStock) {
+	private void addPurchaseLog(SkuPo skuPo, Integer inStock, String username) {
         PurchaseLogPo purchaseLogPo = new PurchaseLogPo();
         purchaseLogPo.setStoreId(skuPo.getStoreId());
         purchaseLogPo.setProductId(skuPo.getProductId());
@@ -243,7 +240,7 @@ public class ProductServiceImpl implements ProductService {
         purchaseLogPo.setPurchaseNums(inStock);
         purchaseLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(inStock)));
         purchaseLogPo.setPurchaseDate(LocalDateTime.now());
-        purchaseLogPo.setPurchaseUsername(RequestContext.getUserInfo().getUsername());
+        purchaseLogPo.setPurchaseUsername(username);
         purchaseLogService.save(purchaseLogPo);
     }
 

@@ -3,12 +3,14 @@ package com.chuncongcong.productmgmt.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chuncongcong.productmgmt.config.authorization.AuthUser;
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.model.dto.SellLogDto;
 import com.chuncongcong.productmgmt.model.vo.SellLogQueryVo;
@@ -40,14 +42,18 @@ public class SellLogController {
 	}
 
 	@GetMapping("/list")
-	public Object list(Paging paging, SellLogQueryVo sellLogQueryVo) {
+	public Object list(Paging paging, SellLogQueryVo sellLogQueryVo, Authentication authentication) {
+		AuthUser authUser = (AuthUser) authentication.getPrincipal();
+		sellLogQueryVo.setStoreId(authUser.getStoreId());
 		Page<SellLogDto> page = sellLogService.list(paging, sellLogQueryVo);
 		List<SellLogVo> sellLogVos = modelMapperOperation.mapToList(page.getResult(), SellLogVo.class);
 		return new SimplePagingObject<>(sellLogVos, paging.getPageNum(), paging.getPageSize(), page.getTotal());
 	}
 
 	@GetMapping("/nums")
-	public Object nums(SellLogQueryVo sellLogQueryVo) {
+	public Object nums(SellLogQueryVo sellLogQueryVo, Authentication authentication) {
+		AuthUser authUser = (AuthUser) authentication.getPrincipal();
+		sellLogQueryVo.setStoreId(authUser.getStoreId());
 		return sellLogService.nums(sellLogQueryVo);
 	}
 }

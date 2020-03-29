@@ -7,7 +7,6 @@ import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.ReturnLogDao;
 import com.chuncongcong.productmgmt.model.dto.PurchaseLogDto;
 import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
@@ -42,7 +41,7 @@ public class ReturnLogServiceImpl implements ReturnLogService {
 		if (returnLogQueryVo.getEndDate() != null) {
 			returnLogQueryVo.setEndDateTime(LocalDateTime.of(returnLogQueryVo.getEndDate(), LocalTime.MAX));
 		}
-		returnLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+		returnLogQueryVo.setStoreId(returnLogQueryVo.getStoreId());
 		Page<PurchaseLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
 				.doSelectPage(() -> returnLogDao.list(returnLogQueryVo));
 		return page;
@@ -50,7 +49,7 @@ public class ReturnLogServiceImpl implements ReturnLogService {
 
 	@Override
 	public TotalNumsDto nums(ReturnLogQueryVo returnLogQueryVo) {
-		returnLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+		returnLogQueryVo.setStoreId(returnLogQueryVo.getStoreId());
 		if(returnLogQueryVo.getStartDate() == null) {
 			returnLogQueryVo.setStartDate(LocalDate.now());
 		}

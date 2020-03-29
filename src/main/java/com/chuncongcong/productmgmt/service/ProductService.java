@@ -17,7 +17,7 @@ public interface ProductService {
 	 * 添加商品
 	 * @param productVo
 	 */
-	ProductVo add(ProductVo productVo);
+	ProductVo add(ProductVo productVo, String username);
 
 	/**
 	 * 更新货品
@@ -29,7 +29,7 @@ public interface ProductService {
 	 * 更新sku
 	 * @param productVo
 	 */
-	ProductVo updateSku(ProductVo productVo);
+	ProductVo updateSku(ProductVo productVo, String username);
 
 	/**
 	 * 获取货品详情（包含商品）

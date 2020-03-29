@@ -3,10 +3,12 @@ package com.chuncongcong.productmgmt.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chuncongcong.productmgmt.config.authorization.AuthUser;
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.model.dto.PurchaseLogDto;
 import com.chuncongcong.productmgmt.model.vo.PurchaseLogQueryVo;
@@ -39,7 +41,9 @@ public class PurchaseLogController {
     private ModelMapperOperation modelMapperOperation;
 
     @GetMapping("/list")
-    public Object list(Paging paging, PurchaseLogQueryVo purchaseLogQueryVo) throws Exception {
+    public Object list(Paging paging, PurchaseLogQueryVo purchaseLogQueryVo, Authentication authentication) throws Exception {
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        purchaseLogQueryVo.setStoreId(authUser.getStoreId());
         Page<PurchaseLogDto> page = purchaseLogService.list(paging, purchaseLogQueryVo);
         List<PurchaseLogVo> purchaseLogVos = modelMapperOperation.mapToList(page.getResult(), PurchaseLogVo.class);
         log.info("PurchaseLogVo list : {}", objectMapper.writeValueAsString(purchaseLogVos));
@@ -47,7 +51,9 @@ public class PurchaseLogController {
     }
 
     @GetMapping("/nums")
-    public Object nums(PurchaseLogQueryVo purchaseLogQueryVo) {
+    public Object nums(PurchaseLogQueryVo purchaseLogQueryVo, Authentication authentication) {
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        purchaseLogQueryVo.setStoreId(authUser.getStoreId());
         return purchaseLogService.nums(purchaseLogQueryVo);
     }
 }

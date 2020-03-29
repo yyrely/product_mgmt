@@ -1,10 +1,7 @@
 package com.chuncongcong.productmgmt.service.impl;
 
-import static com.chuncongcong.productmgmt.model.constants.PublicConstants.USER_MOBILE_PRE;
-import static com.chuncongcong.productmgmt.model.constants.PublicConstants.USER_TOKEN_PRE;
-
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.chuncongcong.productmgmt.config.authorization.AuthUser;
 import com.chuncongcong.productmgmt.dao.UserInfoDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.po.UserInfoPo;
-import com.chuncongcong.productmgmt.model.vo.UserInfoVo;
 import com.chuncongcong.productmgmt.model.vo.WxLoginResponse;
 import com.chuncongcong.productmgmt.model.vo.WxLoginVo;
 import com.chuncongcong.productmgmt.service.UserInfoService;
@@ -30,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 @Service
-public class UserInfoServiceImpl implements UserInfoService {
+public class UserInfoServiceImpl implements UserInfoService, UserDetailsService {
 
     @Value("${app.id}")
     private String appId;
@@ -50,7 +51,22 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-    @Override
+	@Override
+	public UserDetails loadUserByUsername(String mobile) {
+		UserInfoPo query = new UserInfoPo();
+		query.setMobile(mobile);
+		UserInfoPo userInfoPo = userInfoDao.selectOne(query);
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		if(StringUtils.isNotEmpty(userInfoPo.getRoles())) {
+			String[] roles = userInfoPo.getRoles().split(",");
+			for (String role : roles) {
+				authorities.add(new SimpleGrantedAuthority(role));
+			}
+		}
+		return new AuthUser(userInfoPo.getStoreId(), userInfoPo.getUsername(), userInfoPo.getMobile(), userInfoPo.getPassword(), authorities);
+	}
+
+	/*@Override
     public UserInfoVo login(UserInfoVo userInfoVo) throws Exception {
         UserInfoPo query = new UserInfoPo();
         query.setMobile(userInfoVo.getMobile());
@@ -74,7 +90,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoVo.setToken(token);
         userInfoVo.setUsername(userInfoPo.getUsername());
         return userInfoVo;
-    }
+    }*/
 
     @Override
     public WxLoginVo wxLogin(String code) throws Exception {

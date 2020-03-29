@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.SkuDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.SkuDto;
@@ -81,7 +80,7 @@ public class SkuServiceImpl implements SkuService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void sellSku(SellSkuVo sellSkuVo) {
+	public void sellSku(SellSkuVo sellSkuVo, String username) {
 		ProductPo productPo = productService.getSimpleInfo(sellSkuVo.getProductId());
 		SkuPo skuPo = getById(sellSkuVo.getSkuId());
 		SellLogPo sellLogPo = new SellLogPo();
@@ -91,7 +90,7 @@ public class SkuServiceImpl implements SkuService {
 		sellLogPo.setSellNums(sellSkuVo.getSellNums());
 		sellLogPo.setSellPrice(sellSkuVo.getSellPrice());
 		sellLogPo.setSellTotal(sellSkuVo.getSellPrice().multiply(new BigDecimal(sellSkuVo.getSellNums())));
-		sellLogPo.setSellUsername(RequestContext.getUserInfo().getUsername());
+		sellLogPo.setSellUsername(username);
 		sellLogPo.setSellDate(LocalDateTime.now());
 		sellLogService.save(sellLogPo);
 
@@ -110,12 +109,12 @@ public class SkuServiceImpl implements SkuService {
 	}
 
 	@Override
-	public TotalNumsDto nums() {
-		return skuDao.countNumsAndPrice(RequestContext.getUserInfo().getStoreId());
+	public TotalNumsDto nums(Long storeId) {
+		return skuDao.countNumsAndPrice(storeId);
 	}
 
 	@Override
-	public void returnSku(SellSkuVo sellSkuVo) {
+	public void returnSku(SellSkuVo sellSkuVo, String username) {
 		ProductPo productPo = productService.getSimpleInfo(sellSkuVo.getProductId());
 		SkuPo skuPo = getById(sellSkuVo.getSkuId());
 		ReturnLogPo returnLogPo = new ReturnLogPo();
@@ -124,7 +123,7 @@ public class SkuServiceImpl implements SkuService {
 		returnLogPo.setSkuId(skuPo.getSkuId());
 		returnLogPo.setReturnNums(sellSkuVo.getSellNums());
 		returnLogPo.setTotalPrice(skuPo.getSkuInPrice().multiply(new BigDecimal(sellSkuVo.getSellNums())));
-		returnLogPo.setReturnUsername(RequestContext.getUserInfo().getUsername());
+		returnLogPo.setReturnUsername(username);
 		returnLogPo.setReturnDate(LocalDateTime.now());
 		returnLogService.save(returnLogPo);
 

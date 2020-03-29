@@ -1,19 +1,10 @@
 package com.chuncongcong.productmgmt.config.interceptor;
 
-import static com.chuncongcong.productmgmt.model.constants.PublicConstants.USER_TOKEN_PRE;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.chuncongcong.productmgmt.context.RequestContext;
-import com.chuncongcong.productmgmt.exception.BaseErrorCode;
-import com.chuncongcong.productmgmt.exception.ServiceException;
-import com.chuncongcong.productmgmt.model.po.UserInfoPo;
-import org.apache.commons.lang3.StringUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -35,7 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		if (request.getMethod().equalsIgnoreCase(HttpMethod.OPTIONS.name())) {
+		/*if (request.getMethod().equalsIgnoreCase(HttpMethod.OPTIONS.name())) {
 			return true;
 		}
 		String token = request.getHeader("token");
@@ -44,7 +35,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			throw new ServiceException(BaseErrorCode.NOT_LOGIN);
 		}
 		UserInfoPo userInfoPo = objectMapper.readValue(userJson, UserInfoPo.class);
-		RequestContext.setUserInfo(userInfoPo);
+		RequestContext.setUserInfo(userInfoPo);*/
 		return true;
 	}
 }
