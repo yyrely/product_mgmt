@@ -15,7 +15,7 @@ public interface CategoryService {
 	 * 分类列表
 	 * @return
 	 */
-	List<CategoryPo> list();
+	List<CategoryPo> list(Long storeId);
 
 	/**
 	 * 分类详情

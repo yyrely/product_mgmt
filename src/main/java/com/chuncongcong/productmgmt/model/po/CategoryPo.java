@@ -20,5 +20,7 @@ public class CategoryPo extends BaseFiled{
 	@KeySql(dialect = IdentityDialect.MYSQL, useGeneratedKeys = true)
 	private Long categoryId;
 
+	private Long storeId;
+
 	private String categoryName;
 }
