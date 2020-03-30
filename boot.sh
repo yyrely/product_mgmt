@@ -28,7 +28,7 @@ start() {
         git pull
         mvn clean package -Dmaven.test.skip=true
         cd target
-        java -jar ${APP_NAME} &
+        nohup java -jar ${APP_NAME} &
 		echo "${APP_NAME} started"
 	fi
 }
