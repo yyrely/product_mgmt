@@ -11,7 +11,7 @@
 		<result column="return_nums" jdbcType="INTEGER" property="returnNums" />
 		<result column="return_date" jdbcType="TIMESTAMP" property="returnDate" />
 		<result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
-		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto" select="getValue" column="sku_id"/>
+		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto" select="com.chuncongcong.productmgmt.dao.PurchaseLogDao.getValue" column="sku_id"/>
 	</resultMap>
 
 	<select id="list" resultMap="returnLogMap">
