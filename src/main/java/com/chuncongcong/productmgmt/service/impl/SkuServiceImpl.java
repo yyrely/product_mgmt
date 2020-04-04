@@ -47,6 +47,7 @@ public class SkuServiceImpl implements SkuService {
 	private ReturnLogService returnLogService;
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void add(SkuPo skuPo) {
 		skuDao.insert(skuPo);
 	}
@@ -64,6 +65,7 @@ public class SkuServiceImpl implements SkuService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void update(SkuPo skuPo) {
 		skuDao.updateByPrimaryKey(skuPo);
 	}
@@ -115,6 +117,7 @@ public class SkuServiceImpl implements SkuService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void returnSku(SellSkuVo sellSkuVo) {
 		ProductPo productPo = productService.getSimpleInfo(sellSkuVo.getProductId());
 		SkuPo skuPo = getById(sellSkuVo.getSkuId());

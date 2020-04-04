@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.dao.ValueDao;
@@ -41,6 +42,7 @@ public class ValueServiceImpl implements ValueService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public ValuePo save(ValueVo valueVo) {
 		attributeService.getById(valueVo.getAttributeId());
 		ValuePo valuePo = modelMapperOperation.map(valueVo, ValuePo.class);

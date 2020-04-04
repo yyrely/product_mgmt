@@ -6,6 +6,7 @@ import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.PurchaseLogDao;
@@ -30,6 +31,7 @@ public class PurchaseLogServiceImpl implements PurchaseLogService {
     private PurchaseLogDao purchaseLogDao;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void save(PurchaseLogPo purchaseLogPo) {
         purchaseLogDao.insert(purchaseLogPo);
     }

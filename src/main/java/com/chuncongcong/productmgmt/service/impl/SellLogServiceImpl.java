@@ -38,6 +38,7 @@ public class SellLogServiceImpl implements SellLogService {
     private SkuService skuService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void save(SellLogPo sellLogPo) {
         sellLogDao.insert(sellLogPo);
     }
