@@ -75,7 +75,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test").permitAll()
                 //给对应的url设置权限（只有ADMIN才可以访问，除去ROLE_前缀，spring帮我们处理了）
                 //在数据库中用户的role字段是要加ROLE_的ROLE_ADMIN才可以匹配到这里的ADMIN
-                .antMatchers("/api/product/add", "/api/product/update/sku", "/api/sell/log/list").hasRole("ADMIN")
+                .antMatchers("/api/product/add", "/api/product/update/sku", "/api/purchase/log/list").hasRole("ADMIN")
                 //所有请求都需要授权（除了放行的）
                 .anyRequest().authenticated()
                 .and()

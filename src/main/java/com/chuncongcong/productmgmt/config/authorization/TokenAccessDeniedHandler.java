@@ -20,9 +20,9 @@ public class TokenAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-        httpServletResponse.setStatus(403);
+        httpServletResponse.setStatus(500);
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-        httpServletResponse.getWriter().print("{\"code\":\"403\", \n \"msg\":\"权限不足\"}");
+        httpServletResponse.getWriter().print("{\"code\": 500, \n \"msg\":\"权限不足\"}");
         httpServletResponse.flushBuffer();
     }
 }

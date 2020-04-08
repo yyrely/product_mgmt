@@ -94,7 +94,7 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         response.setStatus(500);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().print("{\"code\":\"500\", \n \"msg\":\"用户名或密码不正确，登陆失败\"}");
+        response.getWriter().print("{\"code\": 500, \n \"msg\":\"用户名或密码不正确，登陆失败\"}");
         response.flushBuffer();
     }
 }
