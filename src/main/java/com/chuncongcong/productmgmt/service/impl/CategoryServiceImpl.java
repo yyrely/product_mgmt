@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public List<CategoryPo> list(Long storeId) {
 		CategoryPo query = new CategoryPo();
 		query.setStoreId(storeId);
-		return categoryDao.selectByExample(query);
+		return categoryDao.select(query);
 	}
 
 	@Override
