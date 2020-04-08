@@ -110,7 +110,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
     public static void main(String[] args) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         String encode = bCryptPasswordEncoder.encode("123456");
-        System.out.println(bCryptPasswordEncoder.matches("123456", encode));
+        System.out.println(encode);
     }
 
     @Override
