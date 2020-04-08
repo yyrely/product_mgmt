@@ -26,7 +26,7 @@ public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
         log.info("security not login handler");
         response.setStatus(200);
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().print("{\"code\":\"401\", \n \"msg\":\"not login\"}");
+        response.getWriter().print("{\"code\": 401, \n \"msg\":\"not login\"}");
         response.flushBuffer();
     }
 }
