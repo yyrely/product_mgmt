@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.PurchaseLogDao;
 import com.chuncongcong.productmgmt.model.dto.PurchaseLogDto;
 import com.chuncongcong.productmgmt.model.dto.TotalNumsDto;
@@ -44,7 +43,7 @@ public class PurchaseLogServiceImpl implements PurchaseLogService {
         if (purchaseLogQueryVo.getEndDate() != null) {
             purchaseLogQueryVo.setEndDateTime(LocalDateTime.of(purchaseLogQueryVo.getEndDate(), LocalTime.MAX));
         }
-        purchaseLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+        purchaseLogQueryVo.setStoreId(purchaseLogQueryVo.getStoreId());
         // 因为一对多，产生的数据是多条，导致总数不对
         Page<PurchaseLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> purchaseLogDao.list(purchaseLogQueryVo));
@@ -55,7 +54,7 @@ public class PurchaseLogServiceImpl implements PurchaseLogService {
 
     @Override
     public TotalNumsDto nums(PurchaseLogQueryVo purchaseLogQueryVo) {
-        purchaseLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+        purchaseLogQueryVo.setStoreId(purchaseLogQueryVo.getStoreId());
         if(purchaseLogQueryVo.getStartDate() == null) {
             purchaseLogQueryVo.setStartDate(LocalDate.now());
         }

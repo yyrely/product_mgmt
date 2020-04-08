@@ -10,5 +10,7 @@ import lombok.Data;
 @Data
 public class ProductQueryVo {
 
+	private Long storeId;
+
 	private String productNo;
 }

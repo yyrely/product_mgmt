@@ -13,6 +13,8 @@ import lombok.Data;
 @Data
 public class SellLogQueryVo {
 
+	private Long storeId;
+
 	private LocalDate startDate;
 
 	private LocalDate endDate;
@@ -20,6 +22,4 @@ public class SellLogQueryVo {
 	private LocalDateTime startDateTime;
 
 	private LocalDateTime endDateTime;
-
-	private Long storeId;
 }

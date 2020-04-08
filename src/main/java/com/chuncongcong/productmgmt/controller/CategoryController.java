@@ -2,18 +2,17 @@ package com.chuncongcong.productmgmt.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.chuncongcong.productmgmt.config.authorization.AuthUser;
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.model.po.CategoryPo;
 import com.chuncongcong.productmgmt.model.vo.CategoryVo;
 import com.chuncongcong.productmgmt.service.CategoryService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author HU
@@ -31,8 +30,9 @@ public class CategoryController {
 	private ModelMapperOperation modelMapperOperation;
 
 	@GetMapping("/list")
-	public Object list() {
-		List<CategoryPo> list = categoryService.list();
+	public Object list(Authentication authentication) {
+		AuthUser authUser = (AuthUser)authentication.getPrincipal();
+		List<CategoryPo> list = categoryService.list(authUser.getStoreId());
 		return modelMapperOperation.mapToList(list, CategoryVo.class);
 	}
 

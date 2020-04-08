@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.chuncongcong.productmgmt.context.RequestContext;
 import com.chuncongcong.productmgmt.dao.SellLogDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.SellLogDto;
@@ -51,7 +50,7 @@ public class SellLogServiceImpl implements SellLogService {
         if (sellLogQueryVo.getEndDate() != null) {
             sellLogQueryVo.setEndDateTime(LocalDateTime.of(sellLogQueryVo.getEndDate(), LocalTime.MAX));
         }
-        sellLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+        sellLogQueryVo.setStoreId(sellLogQueryVo.getStoreId());
         Page<SellLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> sellLogDao.list(sellLogQueryVo));
         //TotalNumsDto totalNumsDto = sellLogDao.countNumsAndPrice(sellLogQueryVo);
@@ -69,7 +68,7 @@ public class SellLogServiceImpl implements SellLogService {
         }
         sellLogQueryVo.setStartDateTime(LocalDateTime.of(sellLogQueryVo.getStartDate(), LocalTime.MIN));
         sellLogQueryVo.setEndDateTime(LocalDateTime.of(sellLogQueryVo.getEndDate(), LocalTime.MAX));
-        sellLogQueryVo.setStoreId(RequestContext.getUserInfo().getStoreId());
+        sellLogQueryVo.setStoreId(sellLogQueryVo.getStoreId());
         return sellLogDao.countNumsAndPrice(sellLogQueryVo);
     }
 

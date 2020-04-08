@@ -3,6 +3,7 @@ package com.chuncongcong.productmgmt.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chuncongcong.productmgmt.config.authorization.AuthUser;
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.model.po.ProductPo;
 import com.chuncongcong.productmgmt.model.vo.ProductQueryVo;
@@ -43,9 +45,11 @@ public class ProductController {
 	private ModelMapperOperation modelMapperOperation;
 
 	@PostMapping("/add")
-	public Object add(@RequestBody @Validated ProductVo productVo) throws Exception {
+	public Object add(@RequestBody @Validated ProductVo productVo, Authentication authentication) throws Exception {
 		log.info("add product:{}", objectMapper.writeValueAsString(productVo));
-		return productService.add(productVo);
+		AuthUser authUser = (AuthUser) authentication.getPrincipal();
+		productVo.setStoreId(authUser.getStoreId());
+		return productService.add(productVo, authUser.getName());
 	}
 
 	@PostMapping("/update")
@@ -55,12 +59,16 @@ public class ProductController {
 	}
 
 	@PostMapping("/update/sku")
-	public Object updateSku(@RequestBody ProductVo productVo) {
-		return productService.updateSku(productVo);
+	public Object updateSku(@RequestBody ProductVo productVo, Authentication authentication) {
+		AuthUser authUser = (AuthUser) authentication.getPrincipal();
+		productVo.setStoreId(authUser.getStoreId());
+		return productService.updateSku(productVo, authUser.getName());
 	}
 
 	@GetMapping("/list")
-	public Object listProduct(Paging paging, ProductQueryVo productQueryVo) {
+	public Object listProduct(Paging paging, ProductQueryVo productQueryVo, Authentication authentication) {
+		AuthUser authUser =(AuthUser) authentication.getPrincipal();
+		productQueryVo.setStoreId(authUser.getStoreId());
 		Page<ProductPo> page = productService.listProduct(paging, productQueryVo);
 		List<ProductVo> productVos = modelMapperOperation.mapToList(page.getResult(), ProductVo.class);
 		return new SimplePagingObject<>(productVos, paging.getPageNum(), paging.getPageSize(), page.getTotal());

@@ -50,17 +50,17 @@ public interface SkuService {
 	 * 出售商品
 	 * @param sellSkuVo
 	 */
-	void sellSku(SellSkuVo sellSkuVo);
+	void sellSku(SellSkuVo sellSkuVo, String username);
 
 	/**
 	 * 商品统计
 	 * @return
 	 */
-	TotalNumsDto nums();
+	TotalNumsDto nums(Long storeId);
 
 	/**
 	 * 货品退回给商家
 	 * @param sellSkuVo
 	 */
-	void returnSku(SellSkuVo sellSkuVo);
+	void returnSku(SellSkuVo sellSkuVo, String username);
 }

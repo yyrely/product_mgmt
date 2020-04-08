@@ -1,8 +1,6 @@
 package com.chuncongcong.productmgmt.service;
 
-import com.chuncongcong.productmgmt.model.vo.UserInfoVo;
 import com.chuncongcong.productmgmt.model.vo.WxLoginVo;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * @author HU
@@ -16,8 +14,7 @@ public interface UserInfoService {
 	 * @param userInfoVo 登录信息
 	 * @return token值
 	 */
-	UserInfoVo login(UserInfoVo userInfoVo) throws Exception;
-
+	/*UserInfoVo login(UserInfoVo userInfoVo) throws Exception;*/
 	/**
 	 * 微信用户登录
 	 * @param code

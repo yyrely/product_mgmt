@@ -1,13 +1,11 @@
 package com.chuncongcong.productmgmt.context;
 
-import com.chuncongcong.productmgmt.model.po.UserInfoPo;
-
 /**
  * @author HU
  * @date 2019/12/18 17:57
  */
 
-public class RequestContext {
+/*public class RequestContext {
 
 	public static ThreadLocal<UserInfoPo> USER_INFO = new InheritableThreadLocal<>();
 
@@ -24,4 +22,4 @@ public class RequestContext {
 	public static void clear() {
 		USER_INFO.remove();
 	}
-}
+}*/

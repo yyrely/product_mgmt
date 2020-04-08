@@ -3,10 +3,12 @@ package com.chuncongcong.productmgmt.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chuncongcong.productmgmt.config.authorization.AuthUser;
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.model.dto.PurchaseLogDto;
 import com.chuncongcong.productmgmt.model.vo.ReturnLogQueryVo;
@@ -32,14 +34,18 @@ public class ReturnLogController {
 	private ModelMapperOperation modelMapperOperation;
 
 	@GetMapping("/list")
-	public Object list(Paging paging, ReturnLogQueryVo returnLogQueryVo) {
+	public Object list(Paging paging, ReturnLogQueryVo returnLogQueryVo, Authentication authentication) {
+		AuthUser authUser = (AuthUser) authentication.getPrincipal();
+		returnLogQueryVo.setStoreId(authUser.getStoreId());
 		Page<PurchaseLogDto> page = returnLogService.list(paging, returnLogQueryVo);
 		List<ReturnLogVo> returnLogVos = modelMapperOperation.mapToList(page.getResult(), ReturnLogVo.class);
 		return new SimplePagingObject<>(returnLogVos, paging.getPageNum(), paging.getPageSize(), page.getTotal());
 	}
 
 	@GetMapping("/nums")
-	public Object nums(ReturnLogQueryVo returnLogQueryVo) {
+	public Object nums(ReturnLogQueryVo returnLogQueryVo, Authentication authentication) {
+		AuthUser authUser = (AuthUser) authentication.getPrincipal();
+		returnLogQueryVo.setStoreId(authUser.getStoreId());
 		return returnLogService.nums(returnLogQueryVo);
 	}
 }
