@@ -45,14 +45,16 @@ public class TokenAuthorizationFilter extends OncePerRequestFilter {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 // 从redis中获取用户名
                 String mobile = redisTemplate.opsForValue().get(USER_TOKEN_PRE + token);
-                // 从数据库中根据用户名获取用户
-                UserDetails userDetails = userDetailsService.loadUserByUsername(mobile);
-                if (userDetails != null) {
-                    // 解析并设置认证信息（具体实现不清楚）
-                    UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                if(!StringUtils.isEmpty(mobile)) {
+                    // 从数据库中根据用户名获取用户
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(mobile);
+                    if (userDetails != null) {
+                        // 解析并设置认证信息（具体实现不清楚）
+                        UsernamePasswordAuthenticationToken authentication =
+                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
             }
         }
