@@ -26,11 +26,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.chuncongcong.productmgmt.model.po.UserInfoPo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Hu
  * @date 2019/3/14 17:46
  */
 
+@Slf4j
 public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private StringRedisTemplate redisTemplate;
@@ -52,6 +55,7 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
         try {
             //从body中取出,参数是在请求体中使用json形式传入的
             UserInfoPo users = objectMapper.readValue(request.getInputStream(), UserInfoPo.class);
+            log.info("body userInfo:{}",objectMapper.writeValueAsString(users));
             //模仿UsernamePasswordAuthenticationFilter的方式，将用户名密码进行比较
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(users.getMobile(), users.getPassword()));
         } catch (IOException e) {
