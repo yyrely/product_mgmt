@@ -52,8 +52,8 @@ app:
 logging:
   file:
     path: /root/logs/product_mgmt_log
-#  level:
-#    com:
-#      chuncongcong:
-#        productmgmt:
-#          dao: debug
+  level:
+    com:
+      chuncongcong:
+        productmgmt:
+          dao: debug

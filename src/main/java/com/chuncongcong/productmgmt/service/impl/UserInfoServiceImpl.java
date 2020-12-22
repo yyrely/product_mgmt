@@ -56,6 +56,9 @@ public class UserInfoServiceImpl implements UserInfoService, UserDetailsService 
 		UserInfoPo query = new UserInfoPo();
 		query.setMobile(mobile);
 		UserInfoPo userInfoPo = userInfoDao.selectOne(query);
+		if(userInfoPo == null) {
+			throw new ServiceException("用户不存在");
+		}
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		if(StringUtils.isNotEmpty(userInfoPo.getRoles())) {
 			String[] roles = userInfoPo.getRoles().split(",");
