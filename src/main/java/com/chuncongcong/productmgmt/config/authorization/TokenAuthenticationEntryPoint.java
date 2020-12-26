@@ -23,7 +23,6 @@ public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        log.info("security not login handler");
         response.setStatus(200);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().print("{\"code\": 401, \n \"msg\":\"not login\"}");
