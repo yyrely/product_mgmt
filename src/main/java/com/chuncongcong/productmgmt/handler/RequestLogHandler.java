@@ -47,7 +47,7 @@ public class RequestLogHandler {
         String url = request.getRequestURL().toString();
         log.info("request start  =================>  [ip:{}],[url:{}]", ipAddr, url);
         Object result = joinPoint.proceed();
-        log.info("response end  =================>  [result:{}],[time:{}]", objectMapper.writeValueAsString(request),
+        log.info("response end  =================>  [result:{}],[time:{}]", objectMapper.writeValueAsString(result),
             (System.currentTimeMillis() - startTime));
         return result;
 
