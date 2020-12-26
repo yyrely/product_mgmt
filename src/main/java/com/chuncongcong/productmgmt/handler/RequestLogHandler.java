@@ -45,10 +45,9 @@ public class RequestLogHandler {
         HttpServletRequest request = sra.getRequest();
         String ipAddr = getRemoteHost(request);
         String url = request.getRequestURL().toString();
-        log.info("request start  =================>  [ip:{}],[url:{}]", ipAddr, url);
         Object result = joinPoint.proceed();
-        log.info("response end  =================>  [result:{}],[time:{}]", objectMapper.writeValueAsString(result),
-            (System.currentTimeMillis() - startTime));
+        log.info("request end  =================>  [ip:{}],[url:{}],[time:{}],[result:{}]", ipAddr, url,
+            (System.currentTimeMillis() - startTime), objectMapper.writeValueAsString(result));
         return result;
 
     }
