@@ -57,3 +57,7 @@ logging:
       chuncongcong:
         productmgmt:
           dao: debug
+
+request:
+  log:
+    enable: ture
