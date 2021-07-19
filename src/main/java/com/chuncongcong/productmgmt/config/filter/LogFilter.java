@@ -26,5 +26,6 @@ public class LogFilter implements Filter {
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 		log.info("[url : {}], [params : {}]", httpServletRequest.getRequestURL(), httpServletRequest.getQueryString());
+		filterChain.doFilter(servletRequest, servletResponse);
 	}
 }
