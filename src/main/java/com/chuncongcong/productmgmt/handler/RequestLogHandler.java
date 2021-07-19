@@ -1,5 +1,7 @@
 package com.chuncongcong.productmgmt.handler;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -45,7 +47,8 @@ public class RequestLogHandler {
         HttpServletRequest request = sra.getRequest();
         String ipAddr = getRemoteHost(request);
         String url = request.getRequestURL().toString();
-        log.info("request start  =================>  [ip:{}],[url:{}]", ipAddr, url);
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        log.info("request start  =================>  [ip:{}],[url:{}],[param:{}]", ipAddr, url, objectMapper.writeValueAsString(parameterMap));
         Object result = joinPoint.proceed();
         log.info("response end  =================>  [ip:{}],[time:{}],[result:{}]", ipAddr,
             (System.currentTimeMillis() - startTime), objectMapper.writeValueAsString(result));
