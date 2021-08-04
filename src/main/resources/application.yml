@@ -1,6 +1,9 @@
 server:
   port: 8040
 
+service:
+  ip: ENC(SGOqglPaE1dUyjjA3EEyyMAtiw8oeIhu)
+
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
@@ -9,7 +12,7 @@ spring:
   aop:
     proxy-target-class: true
   datasource:
-    url: jdbc:mysql://ENC(SGOqglPaE1dUyjjA3EEyyMAtiw8oeIhu):3306/product_mgmt?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${service.ip}:3306/product_mgmt?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     password: ENC(pfnBfUXIfcKWjiNJQNgJ29lEYfQ2AZ5w)
     username: ENC(AkL48Oi3cR5nLEjZJ3Y32Q==)
     driver-class-name: com.mysql.jdbc.Driver
@@ -23,7 +26,7 @@ spring:
       max-lifetime: 60000
   redis:
     port: 6379
-    host: ENC(SGOqglPaE1dUyjjA3EEyyMAtiw8oeIhu)
+    host: ${service.ip}
     database: 0
     timeout: 10000
     lettuce:
@@ -64,4 +67,6 @@ logging:
 request:
   log:
     enable: false
-
+jasypt:
+  encryptor:
+    password: 123456

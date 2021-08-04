@@ -67,9 +67,4 @@ public class TestController {
 		return test;
 	}
 
-	@GetMapping("/jasype")
-	public Object jasype(String test) {
-		return stringEncryptor.encrypt(test);
-	}
-
 }
