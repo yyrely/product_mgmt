@@ -28,7 +28,7 @@ start() {
         git pull
         mvn clean package -Dmaven.test.skip=true
         cd target
-        nohup java -jar ${APP_NAME} &
+        nohup java -jar ${APP_NAME} --jasypt.encryptor.password=123456 &
 		echo "${APP_NAME} started"
 	fi
 }

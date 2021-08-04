@@ -5,17 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.jasypt.encryption.StringEncryptor;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
-import com.chuncongcong.productmgmt.dao.UserInfoDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
-import org.modelmapper.ModelMapper;
 
 /**
  * @author HU
@@ -29,6 +27,9 @@ public class TestController {
 	private String token;
 
 	private String refreshToken;
+
+	@Autowired
+	private StringEncryptor stringEncryptor;
 
 
 	@GetMapping("/token")
@@ -64,6 +65,11 @@ public class TestController {
 			throw new ServiceException("token 已过期请检查");
 		}
 		return test;
+	}
+
+	@GetMapping("/jasype")
+	public Object jasype(String test) {
+		return stringEncryptor.encrypt(test);
 	}
 
 }
