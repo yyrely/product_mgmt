@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.jasypt.encryption.StringEncryptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ import com.chuncongcong.productmgmt.exception.ServiceException;
 
 @RestController
 @RequestMapping("/test")
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class TestController {
 
 	private String token;
