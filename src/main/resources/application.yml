@@ -12,7 +12,7 @@ spring:
   aop:
     proxy-target-class: true
   datasource:
-    url: jdbc:mysql://${service.ip}:3306/product_mgmt?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${service.ip}:3306/product_mgmt?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     password: ENC(pfnBfUXIfcKWjiNJQNgJ29lEYfQ2AZ5w)
     username: ENC(AkL48Oi3cR5nLEjZJ3Y32Q==)
     driver-class-name: com.mysql.jdbc.Driver
@@ -67,6 +67,3 @@ logging:
 request:
   log:
     enable: false
-jasypt:
-  encryptor:
-    password: 123456
