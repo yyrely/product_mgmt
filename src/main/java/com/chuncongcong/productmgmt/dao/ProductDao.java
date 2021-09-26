@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.chuncongcong.productmgmt.model.po.ProductPo;
+import com.chuncongcong.productmgmt.model.vo.ProductQueryVo;
+import com.chuncongcong.productmgmt.model.vo.ProductVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author HU
@@ -27,4 +30,7 @@ public interface ProductDao extends MyMapper<ProductPo>{
 	 * @return
 	 */
 	Set<Long> getValues(Long productId);
+
+
+	List<ProductVo> listProduct(@Param("productQueryVo") ProductQueryVo productQueryVo);
 }

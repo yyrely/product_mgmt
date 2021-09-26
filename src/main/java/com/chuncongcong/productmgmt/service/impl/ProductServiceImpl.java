@@ -204,10 +204,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductVo getInfo(Long productId) {
         ProductPo productPo = checkProductId(productId);
-        CategoryPo categoryPo = categoryService.getById(productPo.getCategoryId());
         List<SkuDto> skuDtos = skuService.getListByProductId(productId);
         ProductVo productVo = modelMapperOperation.map(productPo, ProductVo.class);
-        productVo.setCategoryName(categoryPo.getCategoryName());
         List<SkuVo> skuVos = modelMapperOperation.mapToList(skuDtos, SkuVo.class);
         productVo.setSkuList(skuVos);
         return productVo;
@@ -220,15 +218,8 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
     public Page<ProductPo> listProduct(Paging paging, ProductQueryVo productQueryVo) {
-        Weekend<ProductPo> weekend = Weekend.of(ProductPo.class);
-        WeekendCriteria<ProductPo, Object> weekendCriteria = weekend.weekendCriteria();
-        weekendCriteria.andEqualTo(ProductPo::getStoreId, productQueryVo.getStoreId());
-        if(StringUtils.isNotEmpty(productQueryVo.getProductNo())) {
-			weekendCriteria.andLike(ProductPo::getProductNo, "%" + productQueryVo.getProductNo() + "%");
-		}
-		weekend.orderBy("created").desc();
         return PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
-            .doSelectPage(() -> productDao.selectByExample(weekend));
+            .doSelectPage(() -> productDao.listProduct(productQueryVo));
 
 	}
 

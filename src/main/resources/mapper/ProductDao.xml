@@ -9,4 +9,19 @@
 	<select id="getValues" resultType="java.lang.Long">
 		select value_id from product_attr_value where product_id = #{productId}
 	</select>
+	<select id="listProduct" resultType="com.chuncongcong.productmgmt.model.vo.ProductVo">
+		select
+			t1.*,
+		    t2.category_name
+		from product t1
+		left join category t2
+		on t1.category_id = t2.category_id
+		<where>
+			t1.store_id = #{productQueryVo.storeId}
+			<if test="productQueryVo.productNo != null and productQueryVo.productNo != ''">
+				and t1.product_no like "%"#{productQueryVo.productNo}"%"
+			</if>
+			order by created desc
+		</where>
+	</select>
 </mapper>
