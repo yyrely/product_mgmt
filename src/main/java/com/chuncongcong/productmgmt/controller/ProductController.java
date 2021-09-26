@@ -69,9 +69,8 @@ public class ProductController {
 	public Object listProduct(Paging paging, ProductQueryVo productQueryVo, Authentication authentication) {
 		AuthUser authUser =(AuthUser) authentication.getPrincipal();
 		productQueryVo.setStoreId(authUser.getStoreId());
-		Page<ProductPo> page = productService.listProduct(paging, productQueryVo);
-		List<ProductVo> productVos = modelMapperOperation.mapToList(page.getResult(), ProductVo.class);
-		return new SimplePagingObject<>(productVos, paging.getPageNum(), paging.getPageSize(), page.getTotal());
+		Page<ProductVo> page = productService.listProduct(paging, productQueryVo);
+		return new SimplePagingObject<>(page.getResult(), paging.getPageNum(), paging.getPageSize(), page.getTotal());
 	}
 
 	@GetMapping("/get/info/{productId}")

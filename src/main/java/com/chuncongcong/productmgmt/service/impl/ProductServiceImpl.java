@@ -217,7 +217,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-    public Page<ProductPo> listProduct(Paging paging, ProductQueryVo productQueryVo) {
+    public Page<ProductVo> listProduct(Paging paging, ProductQueryVo productQueryVo) {
         return PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> productDao.listProduct(productQueryVo));
 

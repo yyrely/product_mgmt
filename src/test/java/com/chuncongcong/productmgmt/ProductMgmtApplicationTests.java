@@ -23,7 +23,7 @@ class ProductMgmtApplicationTests {
 		Paging paging = new Paging();
 		ProductQueryVo query = new ProductQueryVo();
 		query.setStoreId(1L);
-		Page<ProductPo> productPos = productService.listProduct(paging, query);
+		Page<ProductVo> productPos = productService.listProduct(paging, query);
 		System.out.println(productPos);
 	}
 

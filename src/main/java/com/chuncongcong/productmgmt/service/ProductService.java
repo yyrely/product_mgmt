@@ -49,6 +49,6 @@ public interface ProductService {
 	 * 获取货品列表
 	 * @param paging
 	 */
-	Page<ProductPo> listProduct(Paging paging, ProductQueryVo productQueryVo);
+	Page<ProductVo> listProduct(Paging paging, ProductQueryVo productQueryVo);
 
 }
