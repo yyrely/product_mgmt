@@ -21,7 +21,7 @@
 			<if test="productQueryVo.productNo != null and productQueryVo.productNo != ''">
 				and t1.product_no like "%"#{productQueryVo.productNo}"%"
 			</if>
-			order by created desc
+			order by t1.created desc
 		</where>
 	</select>
 </mapper>
