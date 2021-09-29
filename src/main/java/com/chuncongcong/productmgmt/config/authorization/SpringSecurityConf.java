@@ -57,17 +57,15 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 //关闭session，不再使用
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .csrf().disable()
                 //未登录结果处理
-                .httpBasic().authenticationEntryPoint(authenticationEntryPoint)
-                .and()
                 //权限不足结果处理
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler)
+                .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 //权限设置管理
                 .authorizeRequests()
