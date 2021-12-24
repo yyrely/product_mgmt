@@ -14,8 +14,7 @@
 			t1.*,
 		    t2.category_name
 		from product t1
-		left join category t2
-		on t1.category_id = t2.category_id
+		left join category t2 on t1.category_id = t2.category_id
 		<where>
 			t1.store_id = #{productQueryVo.storeId}
 			<if test="productQueryVo.productNo != null and productQueryVo.productNo != ''">

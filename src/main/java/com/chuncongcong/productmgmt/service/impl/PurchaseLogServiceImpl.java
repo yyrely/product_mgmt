@@ -47,8 +47,6 @@ public class PurchaseLogServiceImpl implements PurchaseLogService {
         // 因为一对多，产生的数据是多条，导致总数不对
         Page<PurchaseLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> purchaseLogDao.list(purchaseLogQueryVo));
-        //TotalNumsDto totalNumsDto = purchaseLogDao.countNumsAndPrice(purchaseLogQueryVo);
-        //page.setTotal(totalNumsDto.getCounts());
         return page;
     }
 

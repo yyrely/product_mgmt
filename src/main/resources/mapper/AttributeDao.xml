@@ -14,12 +14,13 @@
 
 	<select id="getAttributeAndValue" resultMap="AttributeResultMap">
 		SELECT
-		t1.attribute_id,
-		t1.category_id,
-		t1.attribute_name,
-		t2.value_id,
-		t2.value_name
-		from attribute t1 left join attr_value t2 on t1.attribute_id = t2.attribute_id
+			t1.attribute_id,
+			t1.category_id,
+			t1.attribute_name,
+			t2.value_id,
+			t2.value_name
+		from attribute t1
+		left join attr_value t2 on t1.attribute_id = t2.attribute_id
 		where t1.category_id = #{categoryId}
 	</select>
 </mapper>

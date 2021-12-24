@@ -30,12 +30,9 @@
 		    t4.attribute_id,
 		    t4.attribute_name
 		from product_sku t1
-		left join sku_value t2
-		on t1.sku_id = t2.sku_Id
-		left join attr_value t3
-		on t2.value_id = t3.value_id
-		left join attribute t4
-		on t3.attribute_id = t4.attribute_id
+		left join sku_value t2 on t1.sku_id = t2.sku_Id
+		left join attr_value t3 on t2.value_id = t3.value_id
+		left join attribute t4 on t3.attribute_id = t4.attribute_id
 		where t1.product_id = #{productId}
 	</select>
 	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.TotalNumsDto">

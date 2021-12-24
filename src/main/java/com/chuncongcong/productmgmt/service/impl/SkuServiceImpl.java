@@ -85,6 +85,11 @@ public class SkuServiceImpl implements SkuService {
 	public void sellSku(SellSkuVo sellSkuVo, String username) {
 		ProductPo productPo = productService.getSimpleInfo(sellSkuVo.getProductId());
 		SkuPo skuPo = getById(sellSkuVo.getSkuId());
+		Integer origStockNums = skuPo.getSkuStock();
+		if (sellSkuVo.getSellNums().compareTo(origStockNums) > 0) {
+			throw new ServiceException("库存不足，请检查");
+		}
+
 		SellLogPo sellLogPo = new SellLogPo();
 		sellLogPo.setStoreId(productPo.getStoreId());
 		sellLogPo.setProductId(productPo.getProductId());
@@ -96,10 +101,6 @@ public class SkuServiceImpl implements SkuService {
 		sellLogPo.setSellDate(LocalDateTime.now());
 		sellLogService.save(sellLogPo);
 
-		Integer origStockNums = skuPo.getSkuStock();
-		if (sellSkuVo.getSellNums().compareTo(origStockNums) > 0) {
-			throw new ServiceException("库存不足，请检查");
-		}
 		skuPo.setSkuStock(origStockNums - sellSkuVo.getSellNums());
 		SkuService skuServiceAop = (SkuService) AopContext.currentProxy();
 		skuServiceAop.updateByOrigStockNums(skuPo, origStockNums);

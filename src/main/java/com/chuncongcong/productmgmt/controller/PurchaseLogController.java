@@ -1,9 +1,13 @@
 package com.chuncongcong.productmgmt.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.chuncongcong.productmgmt.config.authorization.AuthUser;
 import com.chuncongcong.productmgmt.config.modelMapper.ModelMapperOperation;
 import com.chuncongcong.productmgmt.model.dto.PurchaseLogDto;
+import com.chuncongcong.productmgmt.model.vo.PurchaseLogMergeVo;
 import com.chuncongcong.productmgmt.model.vo.PurchaseLogQueryVo;
+import com.chuncongcong.productmgmt.model.vo.PurchaseLogSkuVo;
 import com.chuncongcong.productmgmt.model.vo.PurchaseLogVo;
 import com.chuncongcong.productmgmt.page.Paging;
 import com.chuncongcong.productmgmt.page.SimplePagingObject;
@@ -46,7 +52,6 @@ public class PurchaseLogController {
         purchaseLogQueryVo.setStoreId(authUser.getStoreId());
         Page<PurchaseLogDto> page = purchaseLogService.list(paging, purchaseLogQueryVo);
         List<PurchaseLogVo> purchaseLogVos = modelMapperOperation.mapToList(page.getResult(), PurchaseLogVo.class);
-        log.info("PurchaseLogVo list : {}", objectMapper.writeValueAsString(purchaseLogVos));
         return new SimplePagingObject<>(purchaseLogVos, paging.getPageNum(), paging.getPageSize(), page.getTotal());
     }
 
@@ -55,5 +60,28 @@ public class PurchaseLogController {
         AuthUser authUser = (AuthUser) authentication.getPrincipal();
         purchaseLogQueryVo.setStoreId(authUser.getStoreId());
         return purchaseLogService.nums(purchaseLogQueryVo);
+    }
+
+    @GetMapping("/list/merge")
+    public Object listMerge(Paging paging, PurchaseLogQueryVo purchaseLogQueryVo, Authentication authentication) throws Exception {
+        AuthUser authUser = (AuthUser) authentication.getPrincipal();
+        purchaseLogQueryVo.setStoreId(authUser.getStoreId());
+        Page<PurchaseLogDto> page = purchaseLogService.list(paging, purchaseLogQueryVo);
+        List<PurchaseLogMergeVo> purchaseLogMergeVos = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(page.getResult())) {
+            PurchaseLogMergeVo lastPurchaseLogMergeVo = null;
+            for(PurchaseLogDto purchaseLogDto : page.getResult()) {
+                if(Objects.isNull(lastPurchaseLogMergeVo) ||
+                        (!lastPurchaseLogMergeVo.getProductNo().equals(purchaseLogDto.getProductNo())
+                                && !lastPurchaseLogMergeVo.getPurchaseDate().equals(purchaseLogDto.getPurchaseDate()))) {
+                    lastPurchaseLogMergeVo = modelMapperOperation.map(purchaseLogDto, PurchaseLogMergeVo.class);
+                    purchaseLogMergeVos.add(lastPurchaseLogMergeVo);
+                }
+                List<PurchaseLogSkuVo> purchaseLogSkuVoList = lastPurchaseLogMergeVo.getPurchaseLogSkuVoList();
+                PurchaseLogSkuVo purchaseLogSkuVo =  modelMapperOperation.map(purchaseLogDto, PurchaseLogSkuVo.class);
+                purchaseLogSkuVoList.add(purchaseLogSkuVo);
+            }
+        }
+        return new SimplePagingObject<>(purchaseLogMergeVos, paging.getPageNum(), paging.getPageSize(), page.getTotal());
     }
 }

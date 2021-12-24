@@ -11,7 +11,9 @@
 		<result column="purchase_nums" jdbcType="INTEGER" property="purchaseNums" />
 		<result column="purchase_date" jdbcType="TIMESTAMP" property="purchaseDate" />
 		<result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
-		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto" select="getValue" column="sku_id">
+		<collection property="valueList" ofType="com.chuncongcong.productmgmt.model.dto.ValueDto">
+			<id column="value_id" jdbcType="BIGINT" property="valueId" />
+			<result column="value_name" jdbcType="VARCHAR" property="valueName" />
 		</collection>
 	</resultMap>
 
@@ -24,16 +26,20 @@
 
 	<select id="list" resultMap="purchaseLogMap">
 		select
-		t1.purchase_id,
-		t2.product_id,
-		t2.product_name,
-		t2.product_no,
-		t1.sku_id,
-		t1.purchase_nums,
-		t1.purchase_date,
-		t1.total_price
+			t1.purchase_id,
+			t2.product_id,
+			t2.product_name,
+			t2.product_no,
+			t1.sku_id,
+			t1.purchase_nums,
+			t1.purchase_date,
+			t1.total_price,
+			t4.value_id,
+			t4.value_name
 		from purchase_log t1
 		left join product t2 on t1.product_id = t2.product_id
+		left join sku_value t3 on t1.sku_id = t3.sku_id
+		left join attr_value t4 on t3.value_id = t4.value_id
 		<where>
 			<if test="purchaseLogQueryVo.startDateTime!=null">
 				and t1.purchase_date >= #{purchaseLogQueryVo.startDateTime}
@@ -46,15 +52,6 @@
 			</if>
 		</where>
 		order by purchase_date desc,t1.purchase_id
-	</select>
-
-	<select id="getValue" resultMap="valueMap">
-		select
-		t2.value_id,
-		t2.value_name
-		from sku_value t1
-		left join attr_value t2 on t1.value_id = t2.value_id
-		where t1.sku_id = #{skuId}
 	</select>
 
 	<select id="countNumsAndPrice" resultType="com.chuncongcong.productmgmt.model.dto.TotalNumsDto">
