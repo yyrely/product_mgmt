@@ -45,18 +45,17 @@ public class PurchaseLogServiceImpl implements PurchaseLogService {
         }
         purchaseLogQueryVo.setStoreId(purchaseLogQueryVo.getStoreId());
         // 因为一对多，产生的数据是多条，导致总数不对
-        Page<PurchaseLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
+        return PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> purchaseLogDao.list(purchaseLogQueryVo));
-        return page;
     }
 
     @Override
     public TotalNumsDto nums(PurchaseLogQueryVo purchaseLogQueryVo) {
         purchaseLogQueryVo.setStoreId(purchaseLogQueryVo.getStoreId());
-        if(purchaseLogQueryVo.getStartDate() == null) {
+        if (purchaseLogQueryVo.getStartDate() == null) {
             purchaseLogQueryVo.setStartDate(LocalDate.now());
         }
-        if(purchaseLogQueryVo.getEndDate() == null) {
+        if (purchaseLogQueryVo.getEndDate() == null) {
             purchaseLogQueryVo.setEndDate(LocalDate.now());
         }
         purchaseLogQueryVo.setStartDateTime(LocalDateTime.of(purchaseLogQueryVo.getStartDate(), LocalTime.MIN));

@@ -26,40 +26,39 @@ import com.github.pagehelper.PageHelper;
 @Service
 public class ReturnLogServiceImpl implements ReturnLogService {
 
-	@Autowired
-	private ReturnLogDao returnLogDao;
+    @Autowired
+    private ReturnLogDao returnLogDao;
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void save(ReturnLogPo returnLogPo) {
-		returnLogDao.insert(returnLogPo);
-	}
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void save(ReturnLogPo returnLogPo) {
+        returnLogDao.insert(returnLogPo);
+    }
 
-	@Override
-	public Page<PurchaseLogDto> list(Paging paging, ReturnLogQueryVo returnLogQueryVo) {
-		if (returnLogQueryVo.getStartDate() != null) {
-			returnLogQueryVo.setStartDateTime(LocalDateTime.of(returnLogQueryVo.getStartDate(), LocalTime.MIN));
-		}
-		if (returnLogQueryVo.getEndDate() != null) {
-			returnLogQueryVo.setEndDateTime(LocalDateTime.of(returnLogQueryVo.getEndDate(), LocalTime.MAX));
-		}
-		returnLogQueryVo.setStoreId(returnLogQueryVo.getStoreId());
-		Page<PurchaseLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
-				.doSelectPage(() -> returnLogDao.list(returnLogQueryVo));
-		return page;
-	}
+    @Override
+    public Page<PurchaseLogDto> list(Paging paging, ReturnLogQueryVo returnLogQueryVo) {
+        if (returnLogQueryVo.getStartDate() != null) {
+            returnLogQueryVo.setStartDateTime(LocalDateTime.of(returnLogQueryVo.getStartDate(), LocalTime.MIN));
+        }
+        if (returnLogQueryVo.getEndDate() != null) {
+            returnLogQueryVo.setEndDateTime(LocalDateTime.of(returnLogQueryVo.getEndDate(), LocalTime.MAX));
+        }
+        returnLogQueryVo.setStoreId(returnLogQueryVo.getStoreId());
+        return PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
+            .doSelectPage(() -> returnLogDao.list(returnLogQueryVo));
+    }
 
-	@Override
-	public TotalNumsDto nums(ReturnLogQueryVo returnLogQueryVo) {
-		returnLogQueryVo.setStoreId(returnLogQueryVo.getStoreId());
-		if(returnLogQueryVo.getStartDate() == null) {
-			returnLogQueryVo.setStartDate(LocalDate.now());
-		}
-		if(returnLogQueryVo.getEndDate() == null) {
-			returnLogQueryVo.setEndDate(LocalDate.now());
-		}
-		returnLogQueryVo.setStartDateTime(LocalDateTime.of(returnLogQueryVo.getStartDate(), LocalTime.MIN));
-		returnLogQueryVo.setEndDateTime(LocalDateTime.of(returnLogQueryVo.getEndDate(), LocalTime.MAX));
-		return returnLogDao.countNumsAndPrice(returnLogQueryVo);
-	}
+    @Override
+    public TotalNumsDto nums(ReturnLogQueryVo returnLogQueryVo) {
+        returnLogQueryVo.setStoreId(returnLogQueryVo.getStoreId());
+        if (returnLogQueryVo.getStartDate() == null) {
+            returnLogQueryVo.setStartDate(LocalDate.now());
+        }
+        if (returnLogQueryVo.getEndDate() == null) {
+            returnLogQueryVo.setEndDate(LocalDate.now());
+        }
+        returnLogQueryVo.setStartDateTime(LocalDateTime.of(returnLogQueryVo.getStartDate(), LocalTime.MIN));
+        returnLogQueryVo.setEndDateTime(LocalDateTime.of(returnLogQueryVo.getEndDate(), LocalTime.MAX));
+        return returnLogDao.countNumsAndPrice(returnLogQueryVo);
+    }
 }

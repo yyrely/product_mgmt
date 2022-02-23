@@ -23,4 +23,15 @@
 			order by t1.created desc
 		</where>
 	</select>
+	<select id="productPurchaseNums" resultType="com.chuncongcong.productmgmt.model.dto.SkuPurchaseDto">
+		SELECT
+			t2.SKU_ID,
+		    sum(PURCHASE_NUMS) as purchaseNums
+		FROM
+			product t1
+			LEFT JOIN product_sku t2 ON t1.PRODUCT_ID = t2.PRODUCT_ID
+			LEFT JOIN purchase_log t3 ON t2.SKU_ID = t3.SKU_ID
+		where PRODUCT_NO = #{productNo}
+		GROUP BY t2.SKU_ID
+	</select>
 </mapper>

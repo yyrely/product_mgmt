@@ -2,10 +2,14 @@ package com.chuncongcong.productmgmt.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.chuncongcong.productmgmt.model.dto.SkuPurchaseDto;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,15 +81,15 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(rollbackFor = Exception.class)
     public ProductVo add(ProductVo productVo, String username) {
 
-    	// 判断是否存在货品
-		ProductPo query = new ProductPo();
-		query.setProductNo(productVo.getProductNo());
-		ProductPo existProductPo = productDao.selectOne(query);
-		if(existProductPo != null) {
-			throw new ServiceException("该货号的商品已存在");
-		}
-		// 保存货品
-		ProductPo productPo = modelMapperOperation.map(productVo, ProductPo.class);
+        // 判断是否存在货品
+        ProductPo query = new ProductPo();
+        query.setProductNo(productVo.getProductNo());
+        ProductPo existProductPo = productDao.selectOne(query);
+        if (existProductPo != null) {
+            throw new ServiceException("该货号的商品已存在");
+        }
+        // 保存货品
+        ProductPo productPo = modelMapperOperation.map(productVo, ProductPo.class);
         productDao.insert(productPo);
         productVo.setProductId(productPo.getProductId());
 
@@ -119,10 +123,10 @@ public class ProductServiceImpl implements ProductService {
                     productValuePo.setValueId(valueVo.getValueId());
                     productValueDao.insert(productValuePo);
                 }
-				SkuValuePo skuValuePo = new SkuValuePo();
-				skuValuePo.setSkuId(skuPo.getSkuId());
-				skuValuePo.setValueId(valueVo.getValueId());
-				skuValueDao.insert(skuValuePo);
+                SkuValuePo skuValuePo = new SkuValuePo();
+                skuValuePo.setSkuId(skuPo.getSkuId());
+                skuValuePo.setValueId(valueVo.getValueId());
+                skuValueDao.insert(skuValuePo);
             }
         }
         return productVo;
@@ -151,10 +155,10 @@ public class ProductServiceImpl implements ProductService {
                 skuVo.setProductId(productPo.getProductId());
                 SkuPo skuPo = modelMapperOperation.map(skuVo, SkuPo.class);
                 skuService.add(skuPo);
-				skuVo.setSkuId(skuPo.getSkuId());
+                skuVo.setSkuId(skuPo.getSkuId());
                 Set<Long> attributes = productDao.getAttributes(productPo.getProductId());
                 Set<Long> values = productDao.getValues(productPo.getProductId());
-				skuVo.getValueList().forEach(valueVo -> {
+                skuVo.getValueList().forEach(valueVo -> {
                     if (!attributes.contains(valueVo.getAttributeId())) {
                         ProductAttributePo productAttributePo = new ProductAttributePo();
                         productAttributePo.setProductId(productPo.getProductId());
@@ -174,7 +178,7 @@ public class ProductServiceImpl implements ProductService {
                 });
 
                 // 保存进货日志
-                if(skuPo.getSkuStock() > 0) {
+                if (skuPo.getSkuStock() > 0) {
                     addPurchaseLog(skuPo, skuPo.getSkuStock(), username);
                 }
             } else {
@@ -203,27 +207,41 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductVo getInfo(Long productId) {
+        // 获取商品信息
         ProductPo productPo = checkProductId(productId);
+        // 获取sku信息
         List<SkuDto> skuDtos = skuService.getListByProductId(productId);
+        // 获取sku进货数量
+        List<SkuPurchaseDto> skuPurchaseDtos = productDao.productPurchaseNums(productPo.getProductNo());
+        Map<Long, Integer> skuPurchaseMap = skuPurchaseDtos.stream()
+            .collect(Collectors.toMap(SkuPurchaseDto::getSkuId, SkuPurchaseDto::getPurchaseNums));
+
+        // 对象转换
+        List<SkuVo> skuVos = new ArrayList<>();
+        for (SkuDto skuDto : skuDtos) {
+            SkuVo skuVo = modelMapperOperation.map(skuDto, SkuVo.class);
+            skuVo.setPurchaseNums(skuPurchaseMap.get(skuVo.getSkuId()));
+            skuVo.setSellNums(skuVo.getPurchaseNums() - skuVo.getSkuStock());
+            skuVos.add(skuVo);
+        }
         ProductVo productVo = modelMapperOperation.map(productPo, ProductVo.class);
-        List<SkuVo> skuVos = modelMapperOperation.mapToList(skuDtos, SkuVo.class);
         productVo.setSkuList(skuVos);
         return productVo;
     }
 
-	@Override
-	public ProductPo getSimpleInfo(Long productId) {
-		return checkProductId(productId);
-	}
+    @Override
+    public ProductPo getSimpleInfo(Long productId) {
+        return checkProductId(productId);
+    }
 
-	@Override
+    @Override
     public Page<ProductVo> listProduct(Paging paging, ProductQueryVo productQueryVo) {
         return PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> productDao.listProduct(productQueryVo));
 
-	}
+    }
 
-	private void addPurchaseLog(SkuPo skuPo, Integer inStock, String username) {
+    private void addPurchaseLog(SkuPo skuPo, Integer inStock, String username) {
         PurchaseLogPo purchaseLogPo = new PurchaseLogPo();
         purchaseLogPo.setStoreId(skuPo.getStoreId());
         purchaseLogPo.setProductId(skuPo.getProductId());

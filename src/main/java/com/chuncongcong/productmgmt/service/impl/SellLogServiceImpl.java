@@ -51,9 +51,8 @@ public class SellLogServiceImpl implements SellLogService {
             sellLogQueryVo.setEndDateTime(LocalDateTime.of(sellLogQueryVo.getEndDate(), LocalTime.MAX));
         }
         sellLogQueryVo.setStoreId(sellLogQueryVo.getStoreId());
-        Page<SellLogDto> page = PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
+        return PageHelper.startPage(paging.getPageNum(), paging.getPageSize())
             .doSelectPage(() -> sellLogDao.list(sellLogQueryVo));
-        return page;
     }
 
     @Override

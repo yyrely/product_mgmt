@@ -30,6 +30,10 @@ public class SkuVo {
 	@Min(value = 0, message = "库存最小为0")
 	private Integer skuStock;
 
+	private Integer purchaseNums;
+
+	private Integer sellNums;
+
 	private String skuDesc;
 
 	private List<ValueVo> valueList;

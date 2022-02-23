@@ -1,7 +1,5 @@
 package com.chuncongcong.productmgmt.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
@@ -46,7 +44,6 @@ public class ProductController {
 
 	@PostMapping("/add")
 	public Object add(@RequestBody @Validated ProductVo productVo, Authentication authentication) throws Exception {
-		log.info("add product:{}", objectMapper.writeValueAsString(productVo));
 		AuthUser authUser = (AuthUser) authentication.getPrincipal();
 		productVo.setStoreId(authUser.getStoreId());
 		return productService.add(productVo, authUser.getName());

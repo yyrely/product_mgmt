@@ -19,11 +19,6 @@ public class UserInfoController {
 	@Autowired
 	private UserInfoService userInfoService;
 
-	/*@PostMapping("/login")
-	public Object login(@RequestBody @Validated UserInfoVo userInfoVo) throws Exception {
-		return userInfoService.login(userInfoVo);
-	}*/
-
 	@PostMapping("/wx/login")
 	public Object wxLogin(String code) throws Exception {
 		return userInfoService.wxLogin(code);
