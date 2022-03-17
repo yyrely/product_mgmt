@@ -103,7 +103,7 @@ public class TestController {
 	}
 
 	@GetMapping("/getMobile")
-	public Object getMobile(@RequestParam("size") Integer size) {
+	public Object getMobile(@RequestParam(value = "size", defaultValue = "100") Integer size) {
 		redisTemplate.opsForValue().set("mobile:flag", "0");
 		testController.func(size);
 		return null;
