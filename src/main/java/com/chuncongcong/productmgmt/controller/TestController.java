@@ -149,7 +149,8 @@ public class TestController {
 			String post = HttpUtil.post("http://fsp-nb.zj.chinamobile.com/api-gateway/nb-moa-server/api-record-m/dz/queryInfo_sys", checkParam);
 			try {
 				JSONObject postJsonObject = JSONUtil.parseObj(post);
-				content.add(phoneObject.get("phone") + " " + postJsonObject.get("data"));
+				JSONObject data = postJsonObject.getJSONObject("data");
+				content.add(phoneObject.get("phone") + " " + data.get("result1") + " " + data.get("result2"));
 				TimeUnit.MILLISECONDS.sleep(200);
 			} catch (Exception e) {
 				log.error("验证手机号异常：{}, {}",post, e.getMessage(), e);
