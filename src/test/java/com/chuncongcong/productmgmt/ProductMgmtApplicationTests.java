@@ -24,7 +24,7 @@ class ProductMgmtApplicationTests {
 
 	@Test
 	public void testProductList() {
-		System.out.println(stringEncryptor.decrypt("AkL48Oi3cR5nLEjZJ3Y32Q=="));
+
 	}
 
 }

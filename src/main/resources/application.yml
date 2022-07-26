@@ -2,7 +2,7 @@ server:
   port: 8040
 
 service:
-  ip: ENC(SGOqglPaE1dUyjjA3EEyyMAtiw8oeIhu)
+  ip: ENC(fz2RI04VRYSKtqRJFBin0YQaQWMabJ91)
 
 spring:
   mvc:
