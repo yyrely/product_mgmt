@@ -9,9 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.chuncongcong.productmgmt.model.dto.SkuPurchaseDto;
-import org.apache.commons.lang3.StringUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +20,7 @@ import com.chuncongcong.productmgmt.dao.ProductValueDao;
 import com.chuncongcong.productmgmt.dao.SkuValueDao;
 import com.chuncongcong.productmgmt.exception.ServiceException;
 import com.chuncongcong.productmgmt.model.dto.SkuDto;
-import com.chuncongcong.productmgmt.model.po.CategoryPo;
+import com.chuncongcong.productmgmt.model.dto.SkuPurchaseDto;
 import com.chuncongcong.productmgmt.model.po.ProductAttributePo;
 import com.chuncongcong.productmgmt.model.po.ProductPo;
 import com.chuncongcong.productmgmt.model.po.ProductValuePo;
@@ -41,9 +38,6 @@ import com.chuncongcong.productmgmt.service.PurchaseLogService;
 import com.chuncongcong.productmgmt.service.SkuService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-
-import tk.mybatis.mapper.weekend.Weekend;
-import tk.mybatis.mapper.weekend.WeekendCriteria;
 
 /**
  * @author HU
@@ -136,6 +130,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(rollbackFor = Exception.class)
     public ProductPo updateProduct(ProductVo productVo) {
         ProductPo productPo = checkProductId(productVo.getProductId());
+        productPo.setProductNo(productVo.getProductNo());
         productPo.setProductName(productVo.getProductName());
         productPo.setProductPic(productVo.getProductPic());
         productPo.setProductDesc(productVo.getProductDesc());
@@ -147,6 +142,10 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(rollbackFor = Exception.class)
     public ProductVo updateSku(ProductVo productVo, String username) {
         ProductPo productPo = checkProductId(productVo.getProductId());
+        productPo.setProductNo(productVo.getProductNo());
+        productPo.setProductName(productVo.getProductName());
+        productDao.updateByPrimaryKey(productPo);
+
         modelMapperOperation.map(productPo, productVo);
         productVo.getSkuList().forEach(skuVo -> {
             if (skuVo.getSkuId() == null) {
