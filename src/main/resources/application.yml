@@ -1,9 +1,6 @@
 server:
   port: 8040
 
-service:
-  ip: ENC(fz2RI04VRYSKtqRJFBin0YQaQWMabJ91)
-
 spring:
   mvc:
     throw-exception-if-no-handler-found: true
@@ -12,7 +9,7 @@ spring:
   aop:
     proxy-target-class: true
   datasource:
-    url: jdbc:mysql://${service.ip}:3306/product_mgmt?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://mysql-p:3306/product_mgmt?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     password: ENC(pfnBfUXIfcKWjiNJQNgJ29lEYfQ2AZ5w)
     username: ENC(AkL48Oi3cR5nLEjZJ3Y32Q==)
     driver-class-name: com.mysql.jdbc.Driver
@@ -26,7 +23,7 @@ spring:
       max-lifetime: 60000
   redis:
     port: 6379
-    host: ${service.ip}
+    host: redis-p
     database: 0
     timeout: 10000
     lettuce:
@@ -55,7 +52,7 @@ app:
   secret: 38d3fa244261c51f7009192fbb4809d8
 logging:
   file:
-    path: /root/logs/product_mgmt_log
+    path: /var/log/product_mgmt
   pattern:
     console: "%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr([%X{traceId}]) %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
     file: "%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } [%X{traceId}] --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
