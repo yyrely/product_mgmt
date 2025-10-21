@@ -21,18 +21,6 @@ spring:
       validation-timeout: 3000
       login-timeout: 5
       max-lifetime: 60000
-  redis:
-    port: 6379
-    host: redis-p
-    database: 0
-    timeout: 10000
-    lettuce:
-      pool:
-        max-wait: -1
-        max-active: 8
-        max-idle: 8
-        min-idle: 0
-    password: ENC(pfnBfUXIfcKWjiNJQNgJ29lEYfQ2AZ5w)
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml

@@ -1,17 +1,8 @@
 package com.chuncongcong.productmgmt.config.authorization;
 
-import static com.chuncongcong.productmgmt.model.constants.PublicConstants.USER_TOKEN_PRE;
-
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.chuncongcong.productmgmt.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +12,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 /**
  * @author Hu
  * @date 2019/3/15 9:56
@@ -28,9 +25,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class TokenAuthorizationFilter extends OncePerRequestFilter {
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
 
     @Autowired
     @Qualifier("userInfoServiceImpl")
@@ -44,7 +38,7 @@ public class TokenAuthorizationFilter extends OncePerRequestFilter {
         if (!StringUtils.isEmpty(token)) {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 // 从redis中获取用户名
-                String mobile = redisTemplate.opsForValue().get(USER_TOKEN_PRE + token);
+                String mobile = JwtUtil.parseToken(token);
                 if(!StringUtils.isEmpty(mobile)) {
                     // 从数据库中根据用户名获取用户
                     UserDetails userDetails = userDetailsService.loadUserByUsername(mobile);

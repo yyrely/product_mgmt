@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -48,9 +47,6 @@ public class UserInfoServiceImpl implements UserInfoService, UserDetailsService 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
 	@Override
 	public UserDetails loadUserByUsername(String mobile) {
 		UserInfoPo query = new UserInfoPo();
@@ -66,7 +62,7 @@ public class UserInfoServiceImpl implements UserInfoService, UserDetailsService 
 				authorities.add(new SimpleGrantedAuthority(role));
 			}
 		}
-		return new AuthUser(userInfoPo.getStoreId(), userInfoPo.getUsername(), userInfoPo.getMobile(), userInfoPo.getPassword(), authorities);
+		return new AuthUser(userInfoPo.getUserId(), userInfoPo.getStoreId(), userInfoPo.getUsername(), userInfoPo.getMobile(), userInfoPo.getPassword(), authorities);
 	}
 
     @Override

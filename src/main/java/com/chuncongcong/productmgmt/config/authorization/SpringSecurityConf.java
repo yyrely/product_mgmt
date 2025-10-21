@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -32,10 +31,6 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier("userInfoServiceImpl")
     private UserDetailsService userDetailsService;
-
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -96,7 +91,7 @@ public class SpringSecurityConf extends WebSecurityConfigurerAdapter {
      * @throws Exception
      */
     private TokenAuthenticationFilter createTokenAuthenticationFilter() throws Exception {
-        return new TokenAuthenticationFilter(authenticationManagerBean(), redisTemplate, objectMapper);
+        return new TokenAuthenticationFilter(authenticationManagerBean(), objectMapper);
     }
 
 

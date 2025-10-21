@@ -2,6 +2,7 @@ package com.chuncongcong.productmgmt.config.authorization;
 
 import java.util.Collection;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,8 +16,13 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class AuthUser implements UserDetails {
 
+    @Getter
+    private Long id;
+
+    @Getter
     private Long storeId;
 
+    @Getter
     private String name;
 
     private String username;
@@ -25,7 +31,8 @@ public class AuthUser implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public AuthUser(Long storeId, String name, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public AuthUser(Long id, Long storeId, String name, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
         this.storeId = storeId;
         this.name = name;
         this.username = username;
@@ -72,11 +79,4 @@ public class AuthUser implements UserDetails {
         return true;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
 }
